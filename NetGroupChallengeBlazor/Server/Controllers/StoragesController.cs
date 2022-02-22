@@ -28,11 +28,32 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET api/storages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Storage>> GetAsync(Guid id) {
-            var storage = context.Storages.Where(s => s.Id == id).FirstOrDefault();
-            if(storage is null) {
-                storage = new Storage();
+        public async Task<ActionResult<IEnumerable<Storage>>> GetAllNestedAsync(Guid? id) {
+            IEnumerable<Storage> storages;
+
+            if(id == Guid.Empty || id is null) {
+                storages = await context.Storages
+                    .Where(x => x.ParentStorageId == null)
+                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .Include(x => x.ParentStorage)
+                    .ToListAsync();
+            } 
+            else {
+                storages = await context.Storages
+                    .Where(s => s.ParentStorageId == id)
+                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .Include(s => s.ParentStorage)
+                    .ToListAsync();
             }
+            return Ok(storages);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<Storage>> GetByIdAsync([FromBody] Guid Id) {
+            var storage = await context.Storages
+                .Where(s => s.Id == Id)
+                .Include(s => s.ParentStorage)
+                .FirstOrDefaultAsync();
             return Ok(storage);
         }
 
@@ -40,8 +61,13 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         [HttpPost]
         public async Task<ActionResult<Storage>> PostAsync([FromBody] Storage storage) {
             storage.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await context.Storages.AddAsync(storage);
-            await context.SaveChangesAsync();
+            if (storage.ParentStorageId == Guid.Empty) {
+                storage.ParentStorageId = null;
+            }
+            var x = await context.AddAsync(storage);
+
+            var y = await context.SaveChangesAsync();
+
             return Ok();
         }
 

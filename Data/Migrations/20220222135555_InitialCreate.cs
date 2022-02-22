@@ -68,18 +68,22 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "ItemsImages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StorageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ItemImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_ItemsImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemsImages_ItemsImages_ItemImageId",
+                        column: x => x.ItemImageId,
+                        principalTable: "ItemsImages",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -132,6 +136,11 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Storages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Storages_Storages_ParentStorageId",
+                        column: x => x.ParentStorageId,
+                        principalTable: "Storages",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -240,25 +249,58 @@ namespace Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "62b1faba-b2ce-4220-b02e-dacdf7c97513", "06d1e198-9b50-413f-9ca8-f7bbf7c3617e", "User", "USER" });
+            migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StorageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Classification = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ItemOwner = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Weight = table.Column<double>(type: "float", nullable: true),
+                    Length = table.Column<double>(type: "float", nullable: true),
+                    Width = table.Column<double>(type: "float", nullable: true),
+                    Height = table.Column<double>(type: "float", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Items_ItemsImages_ImageId",
+                        column: x => x.ImageId,
+                        principalTable: "ItemsImages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Items_Storages_StorageId",
+                        column: x => x.StorageId,
+                        principalTable: "Storages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a47d88d7-4b74-43e7-bf9d-76485142ea67", "597cc3bd-2bb1-474d-8629-f0fb8bfab7b2", "Admin", "ADMIN" });
+                values: new object[] { "8b0efeb1-b5f7-4240-a4d1-0d3be7fa36e7", "12d067ac-88d5-407c-850c-7948add14746", "User", "USER" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "94ec3e72-1422-4ae6-b2db-307348f02485", "e1a5511a-739c-4941-bf41-7c7bc75cc283", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1850f59c-a670-4652-8cfe-2c44d1240288", 0, "9b3f57cc-d67e-4d86-a7c8-fadbb49d8e38", "admin@gmail.com", false, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEDI9DNEwuHOZPG9W6gNVHFga3pD8eUFI410nR0OCVfwXkXABVSn+1gFWY5LW9oClBQ==", null, false, "e29dab5a-f06e-450a-bc1f-b48381c8ed8d", false, "admin@gmail.com" });
+                values: new object[] { "c5e1a67a-48fa-4746-8291-f598819371d0", 0, "cfbf5e99-913d-454f-aa8f-902146f28636", "admin@gmail.com", false, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAELBA4/pz7sgdVOmzY2lQrgrIGYpkTMS8MergUZT3LobGHZ+hyYaE0X8d+g1Z+IOTIA==", null, false, "54607c4a-d0f5-4723-b8cd-39ddf5255a63", false, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "a47d88d7-4b74-43e7-bf9d-76485142ea67", "1850f59c-a670-4652-8cfe-2c44d1240288" });
+                values: new object[] { "94ec3e72-1422-4ae6-b2db-307348f02485", "c5e1a67a-48fa-4746-8291-f598819371d0" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -311,6 +353,21 @@ namespace Data.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Items_ImageId",
+                table: "Items",
+                column: "ImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_StorageId",
+                table: "Items",
+                column: "StorageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemsImages_ItemImageId",
+                table: "ItemsImages",
+                column: "ItemImageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Keys_Use",
                 table: "Keys",
                 column: "Use");
@@ -334,6 +391,11 @@ namespace Data.Migrations
                 name: "IX_PersistedGrants_SubjectId_SessionId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "SessionId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Storages_ParentStorageId",
+                table: "Storages",
+                column: "ParentStorageId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -366,13 +428,16 @@ namespace Data.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
-                name: "Storages");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ItemsImages");
+
+            migrationBuilder.DropTable(
+                name: "Storages");
         }
     }
 }

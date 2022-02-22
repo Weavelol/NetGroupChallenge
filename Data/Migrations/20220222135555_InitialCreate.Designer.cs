@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220221170655_ItemModelIntsToDoubles")]
-    partial class ItemModelIntsToDoubles
+    [Migration("20220222135555_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -91,17 +91,17 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "97331484-b9af-4993-bb76-a2c7a602670a",
+                            Id = "c5e1a67a-48fa-4746-8291-f598819371d0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e0a9d459-9553-4308-8834-c24c94aa334a",
+                            ConcurrencyStamp = "cfbf5e99-913d-454f-aa8f-902146f28636",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDky4EHGSl1Qo/RdUXjBnaH/yOR424qSShXCauTyldNpyWi4sGdiDJTcEOKi3oLLXQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELBA4/pz7sgdVOmzY2lQrgrIGYpkTMS8MergUZT3LobGHZ+hyYaE0X8d+g1Z+IOTIA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "59c37a97-3814-4413-90db-7d30b8d85478",
+                            SecurityStamp = "54607c4a-d0f5-4723-b8cd-39ddf5255a63",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -146,6 +146,10 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("StorageId");
+
                     b.ToTable("Items");
                 });
 
@@ -159,11 +163,16 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<Guid?>("ItemImageId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemImageId");
 
                     b.ToTable("ItemsImages");
                 });
@@ -174,8 +183,9 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentStorageId")
                         .HasColumnType("uniqueidentifier");
@@ -185,6 +195,8 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentStorageId");
 
                     b.ToTable("Storages");
                 });
@@ -359,15 +371,15 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e760460e-ff31-4720-834b-9913f3edfb28",
-                            ConcurrencyStamp = "fc6dc397-f004-4739-80fb-381a362da59f",
+                            Id = "94ec3e72-1422-4ae6-b2db-307348f02485",
+                            ConcurrencyStamp = "e1a5511a-739c-4941-bf41-7c7bc75cc283",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f00e7407-8039-4f71-a0dc-435ebef60292",
-                            ConcurrencyStamp = "a2b01837-6a8f-44fb-b297-1bad21c87e3f",
+                            Id = "8b0efeb1-b5f7-4240-a4d1-0d3be7fa36e7",
+                            ConcurrencyStamp = "12d067ac-88d5-407c-850c-7948add14746",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -464,8 +476,8 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "97331484-b9af-4993-bb76-a2c7a602670a",
-                            RoleId = "e760460e-ff31-4720-834b-9913f3edfb28"
+                            UserId = "c5e1a67a-48fa-4746-8291-f598819371d0",
+                            RoleId = "94ec3e72-1422-4ae6-b2db-307348f02485"
                         });
                 });
 
@@ -488,6 +500,41 @@ namespace Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Models.Item", b =>
+                {
+                    b.HasOne("Core.Models.ItemImage", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Models.Storage", "ParentStorage")
+                        .WithMany("NestedItems")
+                        .HasForeignKey("StorageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("ParentStorage");
+                });
+
+            modelBuilder.Entity("Core.Models.ItemImage", b =>
+                {
+                    b.HasOne("Core.Models.ItemImage", null)
+                        .WithMany("ForeignImages")
+                        .HasForeignKey("ItemImageId");
+                });
+
+            modelBuilder.Entity("Core.Models.Storage", b =>
+                {
+                    b.HasOne("Core.Models.Storage", "ParentStorage")
+                        .WithMany("NestedStorages")
+                        .HasForeignKey("ParentStorageId");
+
+                    b.Navigation("ParentStorage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -539,6 +586,18 @@ namespace Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Models.ItemImage", b =>
+                {
+                    b.Navigation("ForeignImages");
+                });
+
+            modelBuilder.Entity("Core.Models.Storage", b =>
+                {
+                    b.Navigation("NestedItems");
+
+                    b.Navigation("NestedStorages");
                 });
 #pragma warning restore 612, 618
         }
