@@ -25,7 +25,7 @@
     <div class="form-group row">
         <label for="Image" class="col-sm-4 col-form-label">Image</label>
         <div class="col-sm-8">
-            <InputFile></InputFile>
+            <InputFile OnChange="@LoadFiles" class=form-control id="Image"/>
         </div>
     </div>
 
@@ -114,4 +114,20 @@
         StorageId = Item.ParentStorage.Id;
     }
 
+    private async Task LoadFiles(InputFileChangeEventArgs e) {
+        var image = new ItemImage {
+            Id = Guid.Empty,
+            Title = e.File.Name,
+        };
+
+        MemoryStream ms = new MemoryStream();
+        using var stream = e.File.OpenReadStream();
+        await stream.CopyToAsync(ms);
+
+        image.ImageData = ms.ToArray();
+
+        ms.Close();
+        ms.Dispose();
+        Item.Image = image;
+    }
 }

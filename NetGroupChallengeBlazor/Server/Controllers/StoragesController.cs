@@ -25,7 +25,6 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
             var storages = await context.Storages
                     .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
                     .Include(x => x.ParentStorage)
-                    .Include(x => x.NestedItems)
                     .ToListAsync();
             return Ok(storages);
         }
@@ -36,7 +35,6 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
                 var storages2 = await context.Storages
                     .Where(x => x.ParentStorageId == null)
                     .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                    .Include(x => x.NestedItems)
                     .ToListAsync();
                 return Ok(storages2);
             }
@@ -45,7 +43,6 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
                     .Where(x => x.ParentStorageId == Id)
                     .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
                     .Include(x => x.ParentStorage)
-                    .Include(x => x.NestedItems)
                     .ToListAsync();
             return Ok(storages);
         }

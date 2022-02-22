@@ -41,7 +41,9 @@
             @foreach (var item in Items)
             {
                 <tr>
-                    <td>@item.ImageId</td>
+                    <td>
+                        <img src="@CreateImage(item.Image)"/>
+                    </td>
                     <td>@item.Title</td>
                     <td>@item.ItemOwner</td>
                     <td>@item.Classification</td>
@@ -64,6 +66,9 @@
 
     private Item currentItem = new Item();
 
+    protected override async Task OnInitializedAsync() {
+
+    }
 
     public bool DeleteDialogOpen { get; set; }
 
@@ -88,26 +93,6 @@
         if (accepted) {
             try {
                 var storage = currentItem.ParentStorage;
-                currentItem = new Item {
-                    Id = Guid.Empty,
-                    Title = "testing",
-                    ParentStorage = storage,
-                    StorageId = storage.Id,
-                    ImageId = Guid.Empty,
-                    Image = new ItemImage {
-                        Id = Guid.NewGuid(),
-                        Title = "TestImageTitle",
-                        ImageData = new byte[10]
-                    },
-                    SerialNumber = "testing",
-                    Classification = "testing",
-                    ItemOwner = "testing",
-                    Weight = 10,
-                    Length = 10,
-                    Width = 10,
-                    Height = 10
-                };
-
                 var x = await Http.PostAsJsonAsync<Item>("api/items", currentItem);
             }
             catch(Exception ex) {
@@ -134,5 +119,18 @@
 
     private async Task UpdateItems() {
         //receive items list from api
+    }
+
+    private string CreateImage(ItemImage image) {
+        try {
+            string imageBase64Data = Convert.ToBase64String(image.ImageData);
+            string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            return imageDataURL;
+        } 
+        catch (Exception ex){
+            Console.WriteLine(ex.Message);
+            return string.Empty;
+        }
+        
     }
 }

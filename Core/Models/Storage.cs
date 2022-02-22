@@ -3,7 +3,6 @@
         public Guid? ParentStorageId { get; set; }
         public Storage? ParentStorage { get; set; }
         public string OwnerId { get; set; }
-        public List<Item>? NestedItems { get; set; }
         public string StoragePath { get; set; }
     }
 }
