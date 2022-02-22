@@ -24,7 +24,7 @@
 }
 
 <div class="container">
-    <h3 class="p-3 text-center">Current Storage: @CurrentStorage.Title</h3>
+    <h3 class="p-3 text-center">@CurrentStorage.Title</h3>
     <a></a>
     <table class="table table-striped table-bordered">
         <thead>
@@ -38,7 +38,9 @@
             @foreach (var storage in nestedStorages)
             {
                 <tr>
-                    <td>@storage.Title</td>
+                    <td>
+                        <button type="button" class="btn" @onclick="() => UpdateCurrentStorage(storage)">@storage.Title</button>
+                    </td>
                     <td>
                         <button type="button" class="btn" @onclick="() => OpenDeleteDialog(storage)">Delete</button>
                     </td>
@@ -51,12 +53,7 @@
 
 @code {
     [Parameter]
-    public Storage CurrentStorage { get; set; } = new Storage {
-        Id = Guid.NewGuid(),
-        Title = "Current Storage",
-        ParentStorageId = Guid.NewGuid(),
-        OwnerId = Guid.NewGuid().ToString()
-    };
+    public Storage CurrentStorage { get; set; } = new Storage ();
 
 
     private List<Storage> nestedStorages = new List<Storage> {
@@ -118,6 +115,11 @@
         }
         await UpdateStorages();
         StateHasChanged();
+    }
+
+    private async Task UpdateCurrentStorage(Storage storage) {
+        CurrentStorage = storage;
+        await UpdateStorages();
     }
 
     private async Task UpdateStorages() {
