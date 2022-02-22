@@ -21,9 +21,8 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET api/storages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Storage>>> GetAllRootAsync() {
+        public async Task<ActionResult<IEnumerable<Storage>>> GetAllAsync() {
             var storages = await context.Storages
-                    .Where(x => x.ParentStorageId == null)
                     .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
                     .Include(x => x.ParentStorage)
                     .Include(x => x.NestedItems)
@@ -62,11 +61,11 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
                 storage.ParentStorage = await context.Storages.Where(x => x.Id == storage.ParentStorageId).FirstOrDefaultAsync();
                 storage.StoragePath = $"{storage.ParentStorage.StoragePath}{storage.Title}/";
             }
-            var x = await context.AddAsync(storage);
+            
+            await context.AddAsync(storage);
+            await context.SaveChangesAsync();
 
-            var y = await context.SaveChangesAsync();
-
-            return Ok();
+            return Created(nameof(GetAllAsync), storage);
         }
 
         // DELETE api/storages/5

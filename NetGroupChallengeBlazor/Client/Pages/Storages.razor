@@ -68,8 +68,7 @@
     private Storage newStorage;
     private Storage deleteStorage;
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         await UpdateStorages();
     }
 
@@ -113,7 +112,6 @@
             catch(Exception ex) {
                 Console.Write(ex.Message);
             }
-
         }
         await UpdateStorages();
         StateHasChanged();

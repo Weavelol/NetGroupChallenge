@@ -1,4 +1,5 @@
 ﻿@using Core.Models
+@inject HttpClient Http
 
 @if (CreateDialogOpen) {
     <DialogComponent Title="Create" OnClose="@OnCreateDialogClose">
@@ -84,6 +85,36 @@
 
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
+        if (accepted) {
+            try {
+                var storage = currentItem.ParentStorage;
+                currentItem = new Item {
+                    Id = Guid.Empty,
+                    Title = "testing",
+                    ParentStorage = storage,
+                    StorageId = storage.Id,
+                    ImageId = Guid.Empty,
+                    Image = new ItemImage {
+                        Id = Guid.NewGuid(),
+                        Title = "TestImageTitle",
+                        ImageData = new byte[10]
+                    },
+                    SerialNumber = "testing",
+                    Classification = "testing",
+                    ItemOwner = "testing",
+                    Weight = 10,
+                    Length = 10,
+                    Width = 10,
+                    Height = 10
+                };
+
+                var x = await Http.PostAsJsonAsync<Item>("api/items", currentItem);
+            }
+            catch(Exception ex) {
+                Console.Write(ex.Message);
+            }
+        }
+        await UpdateItems();
         //Call items api to create new item
         StateHasChanged();
     }
@@ -101,4 +132,7 @@
         StateHasChanged();
     }
 
+    private async Task UpdateItems() {
+        //receive items list from api
+    }
 }
