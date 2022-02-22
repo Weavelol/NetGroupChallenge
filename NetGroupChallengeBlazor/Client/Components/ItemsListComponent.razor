@@ -74,10 +74,14 @@
 
     private void OpenDeleteDialog(Item item) {
         DeleteDialogOpen = true;
+        currentItem = item;
         StateHasChanged();
     }
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
+        if (accepted) {
+            await Http.DeleteAsync($"api/items/{currentItem.Id}");
+        }
         StateHasChanged();
     }
 

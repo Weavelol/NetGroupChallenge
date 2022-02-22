@@ -32,28 +32,23 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
                 .Where(x => x.ParentStorage.OwnerId == currentUserId)
                 .Include(x => x.Image)
                 .ToListAsync();
-
-            
-            items.Add(new Item {
-                Id = Guid.NewGuid(),
-                Title = "TestItem",
-                StorageId = Guid.NewGuid(),
-                ImageId = Guid.NewGuid(),
-                SerialNumber = "TestSerialNumber",
-                Classification = "TestClassification",
-                ItemOwner = "TestOwner",
-                Weight = 10,
-                Length = 10,
-                Width = 10,
-                Height = 10
-            });
             return Ok(items);
         }
 
         // GET api/<ItemsController>/5
         [HttpGet("{id}")]
-        public string GetAsync(int id) {
-            return "value";
+        public async Task<ActionResult<Item>> GetAsync(Guid id) {
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var item = await context.Items
+                .Where(x => x.Id == id)
+                .Include(x => x.ParentStorage)
+                .Where(x => x.ParentStorage.OwnerId == currentUserId)
+                .Include(x => x.Image)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            return Ok(item);
         }
 
         // POST api/<ItemsController>
@@ -77,12 +72,28 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // PUT api/<ItemsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value) {
+        public void Put(int id, [FromBody] Item item) {
+
         }
 
         // DELETE api/<ItemsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id) {
+        public async Task<IActionResult> Delete(Guid id) {
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var item = await context.Items
+                .Where(x => x.Id == id)
+                .Include(x => x.ParentStorage)
+                .Where(x => x.ParentStorage.OwnerId == currentUserId)
+                .Include(x => x.Image)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            context.ItemsImages.Remove(item.Image);
+            context.Items.Remove(item);
+
+            await context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
