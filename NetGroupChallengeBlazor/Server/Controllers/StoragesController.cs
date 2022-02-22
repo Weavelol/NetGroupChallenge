@@ -32,13 +32,23 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Storage>> GetByIdAsync(Guid? Id) {
-            var storage = await context.Storages
-                .Where(s => s.Id == Id)
-                .Include(s => s.ParentStorage)
-                .FirstOrDefaultAsync();
-            storage.NestedStorages = await context.Storages.Where(x => x.ParentStorageId == storage.Id).ToListAsync();
-            return Ok(storage);
+        public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid? Id) {
+            if(Id is null || Id == Guid.Empty) {
+                var storages2 = await context.Storages
+                    .Where(x => x.ParentStorageId == null)
+                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .Include(x => x.NestedItems)
+                    .ToListAsync();
+                return Ok(storages2);
+            }
+
+            var storages = await context.Storages
+                    .Where(x => x.ParentStorageId == Id)
+                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .Include(x => x.ParentStorage)
+                    .Include(x => x.NestedItems)
+                    .ToListAsync();
+            return Ok(storages);
         }
 
         // POST api/storages

@@ -127,7 +127,7 @@
             };
             await UpdateCurrentStorage(storage);
         } else {
-            var storage = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.ParentStorageId}");
+            var storage = await Http.GetFromJsonAsync<Storage>($"api/storage/{CurrentStorage.ParentStorageId}");
             await UpdateCurrentStorage(storage);
         }
     }
@@ -143,19 +143,10 @@
 
     private async Task UpdateStorages() {
         try {
-            if(CurrentStorage.Id == Guid.Empty) {
-                var storages = await Http.GetFromJsonAsync<List<Storage>>("api/storages");
-                if(storages is not null) {
-                    nestedStorages = storages;
-                }
-            } 
-            else {
-                var storage = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.Id}");
-                if(storage is not null) {
-                    nestedStorages = storage.NestedStorages;
-                }
-            }
-            
+             var storages = await Http.GetFromJsonAsync<List<Storage>>($"api/storages/{CurrentStorage.Id}");
+             if(storages is not null) {
+                 nestedStorages = storages;
+             }
         } catch (AccessTokenNotAvailableException exception) {
             exception.Redirect();
         } catch (Exception ex) {
