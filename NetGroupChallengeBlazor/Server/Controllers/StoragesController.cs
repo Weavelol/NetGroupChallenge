@@ -19,41 +19,25 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
             this.userManager = userManager;
         }
 
-        // GET: api/storages
+        // GET api/storages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Storage>>> GetAsync() {
-            var storages = await context.Storages.ToListAsync();
-            return Ok(storages);
-        }
-
-        // GET api/storages/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Storage>>> GetAllNestedAsync(Guid? id) {
-            IEnumerable<Storage> storages;
-
-            if(id == Guid.Empty || id is null) {
-                storages = await context.Storages
+        public async Task<ActionResult<IEnumerable<Storage>>> GetAllRootAsync() {
+            var storages = await context.Storages
                     .Where(x => x.ParentStorageId == null)
                     .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
                     .Include(x => x.ParentStorage)
+                    .Include(x => x.NestedItems)
                     .ToListAsync();
-            } 
-            else {
-                storages = await context.Storages
-                    .Where(s => s.ParentStorageId == id)
-                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                    .Include(s => s.ParentStorage)
-                    .ToListAsync();
-            }
             return Ok(storages);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<Storage>> GetByIdAsync([FromBody] Guid Id) {
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Storage>> GetByIdAsync(Guid? Id) {
             var storage = await context.Storages
                 .Where(s => s.Id == Id)
                 .Include(s => s.ParentStorage)
                 .FirstOrDefaultAsync();
+            storage.NestedStorages = await context.Storages.Where(x => x.ParentStorageId == storage.Id).ToListAsync();
             return Ok(storage);
         }
 
@@ -63,6 +47,10 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
             storage.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (storage.ParentStorageId == Guid.Empty) {
                 storage.ParentStorageId = null;
+                storage.StoragePath = $"{storage.Title}/";
+            } else {
+                storage.ParentStorage = await context.Storages.Where(x => x.Id == storage.ParentStorageId).FirstOrDefaultAsync();
+                storage.StoragePath = $"{storage.ParentStorage.StoragePath}{storage.Title}/";
             }
             var x = await context.AddAsync(storage);
 

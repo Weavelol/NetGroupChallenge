@@ -84,6 +84,7 @@
 
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
+        //Call items api to create new item
         StateHasChanged();
     }
 

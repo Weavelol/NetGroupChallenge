@@ -12,19 +12,24 @@
 </ItemsListComponent>
 
 @code {
-    private List<Item> ItemsList = new List<Item> {
-        new Item {
-            Id = Guid.NewGuid(),
-            Title = "TestItem",
-            StorageId = Guid.NewGuid(),
-            ImageId = Guid.NewGuid(),
-            SerialNumber = "TestSerialNumber",
-            Classification = "TestClassification",
-            ItemOwner = "TestOwner",
-            Weight = 10,
-            Length = 10,
-            Width = 10,
-            Height = 10
+    private List<Item> ItemsList = new List<Item>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateItems();
+    }
+
+    private async Task UpdateItems() {
+        try {
+            var items = await Http.GetFromJsonAsync<List<Item>>($"api/items");
+            if(items is not null) {
+                ItemsList = items;
+            }
+        } catch (AccessTokenNotAvailableException exception) {
+            exception.Redirect();
+        } catch (Exception ex) {
+            Console.WriteLine(ex.Message);
         }
-    };
+    }
+
 }

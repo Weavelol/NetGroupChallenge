@@ -9,6 +9,8 @@
 @using System;
 @using System.Threading.Tasks;
 @using System.Text
+@using System.Net.Mime
+@using System.Text.Json.Serialization
 @attribute [Authorize(Roles = "User, Admin")]
 @inject HttpClient Http
 
@@ -26,7 +28,7 @@
 }
 
 <div class="container">
-    <h3 class="p-3 text-center">@storagePath</h3>
+    <h3 class="p-3 text-center">@CurrentStorage.StoragePath</h3>
     <button type="button" class="btn" @onclick="() => SelectPreviousStorage()">Back</button>
     <table class="table table-striped table-bordered">
         <thead>
@@ -65,7 +67,6 @@
     private List<Item> nestedItems = new List<Item>();
     private Storage newStorage;
     private Storage deleteStorage;
-    private string storagePath;
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,11 +95,12 @@
     private void OpenCreateDialog() {
         CreateDialogOpen = true;
         newStorage = new Storage {
-            ParentStorageId = CurrentStorage.Id,
-            Id = Guid.Empty,
-            OwnerId = Guid.Empty.ToString(),
-            NestedItems = new List<Item>()
-        };
+                ParentStorageId = CurrentStorage.Id,
+                Id = Guid.Empty,
+                OwnerId = Guid.Empty.ToString(),
+                NestedItems = new List<Item>(),
+                StoragePath = string.Empty
+    };
         StateHasChanged();
     }
     private async Task OnCreateDialogClose(bool accepted) {
@@ -118,21 +120,20 @@
     }
 
     private async Task SelectPreviousStorage() {
-        if(CurrentStorage.ParentStorage is null) {
+        if(CurrentStorage.ParentStorageId is null) {
             var storage = new Storage {
                 Id = Guid.Empty,
                 Title = string.Empty,
             };
             await UpdateCurrentStorage(storage);
         } else {
-            await UpdateCurrentStorage(CurrentStorage.ParentStorage);
+            var storage = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.ParentStorageId}");
+            await UpdateCurrentStorage(storage);
         }
-        RemoveLast();
     }
 
     private async Task SelectNextStorage(Storage storage) {
         await UpdateCurrentStorage(storage);
-        AddNext(storage.Title);
     }
 
     private async Task UpdateCurrentStorage(Storage storage) {
@@ -142,32 +143,23 @@
 
     private async Task UpdateStorages() {
         try {
-            var storages = await Http.GetFromJsonAsync<List<Storage>>($"api/storages/{CurrentStorage.Id}");
-            if(storages is not null) {
-                nestedStorages = storages;
+            if(CurrentStorage.Id == Guid.Empty) {
+                var storages = await Http.GetFromJsonAsync<List<Storage>>("api/storages");
+                if(storages is not null) {
+                    nestedStorages = storages;
+                }
+            } 
+            else {
+                var storage = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.Id}");
+                if(storage is not null) {
+                    nestedStorages = storage.NestedStorages;
+                }
             }
+            
         } catch (AccessTokenNotAvailableException exception) {
             exception.Redirect();
         } catch (Exception ex) {
             Console.WriteLine(ex.Message);
         }
-    }
-
-    private void AddNext(string last) {
-        if(storagePath == string.Empty || storagePath is null) {
-            storagePath += last;
-        } else {
-            storagePath += $"/{last}";
-        }
-    }
-    private void RemoveLast() {
-        var s = storagePath.Split('/');
-        string path = string.Empty;
-        for(int i = 0; i < s.Length - 1; i++) {
-            path += s[i];
-            if (i != s.Length - 2) path += "/";
-        }
-        if (path == "/") path = string.Empty;
-        storagePath = path;
     }
 }
