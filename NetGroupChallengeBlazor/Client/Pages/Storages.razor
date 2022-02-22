@@ -1,0 +1,135 @@
+﻿@page "/storages"
+@using Core.Models
+@using NetGroupChallengeBlazor.Client.Components
+@using Microsoft.AspNetCore.Authorization 
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Net.Http;
+@using Newtonsoft.Json;
+@using System;
+@using System.Threading.Tasks;
+@attribute [Authorize(Roles = "User, Admin")]
+@inject HttpClient Http
+
+
+@if (CreateDialogOpen) {
+    <DialogComponent Title="Create" OnClose="@OnCreateDialogClose">
+        <StorageFormComponent Storage="@newStorage" />
+    </DialogComponent>
+}
+
+@if (DeleteDialogOpen) {
+    <DialogComponent Title="Delete" OnClose="@OnDeleteDialogClose">
+        Do you want to delete this entry?
+    </DialogComponent>
+}
+
+<div class="container">
+    <h3 class="p-3 text-center">Current Storage: @CurrentStorage.Title</h3>
+    <a></a>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th><button type="button" class="btn" @onclick="() => OpenCreateDialog()">Create</button></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var storage in nestedStorages)
+            {
+                <tr>
+                    <td>@storage.Title</td>
+                    <td>
+                        <button type="button" class="btn" @onclick="() => OpenDeleteDialog(storage)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    [Parameter]
+    public Storage CurrentStorage { get; set; } = new Storage {
+        Id = Guid.NewGuid(),
+        Title = "Current Storage",
+        ParentStorageId = Guid.NewGuid(),
+        OwnerId = Guid.NewGuid().ToString()
+    };
+
+
+    private List<Storage> nestedStorages = new List<Storage> {
+        new Storage {
+            Id = Guid.NewGuid(),
+            Title = "TestingTitle",
+            ParentStorageId = Guid.NewGuid(),
+            OwnerId = Guid.NewGuid().ToString()
+        }
+    };
+    private List<Item> nestedItems = new List<Item>();
+    private Storage newStorage;
+    private Storage deleteStorage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateStorages();
+    }
+
+    public bool DeleteDialogOpen { get; set; }
+
+    private void OpenDeleteDialog(Storage storage) {
+        DeleteDialogOpen = true;
+        deleteStorage = storage;
+        StateHasChanged();
+    }
+    private async Task OnDeleteDialogClose(bool accepted) {
+        DeleteDialogOpen = false;
+        if (accepted) {
+            await Http.DeleteAsync($"api/storages/{deleteStorage.Id}");
+        }
+        await UpdateStorages();
+        StateHasChanged();
+    }
+
+
+    public bool CreateDialogOpen { get; set; }
+
+    private void OpenCreateDialog() {
+        CreateDialogOpen = true;
+        newStorage = new Storage {
+            ParentStorageId = CurrentStorage.Id,
+            Id = Guid.Empty,
+            OwnerId = Guid.Empty.ToString()
+        };
+        StateHasChanged();
+    }
+    private async Task OnCreateDialogClose(bool accepted) {
+        CreateDialogOpen = false;
+        if (accepted) {
+            try {
+                var x = await Http.PostAsJsonAsync<Storage>("api/storages", newStorage);
+
+            }
+            catch(Exception ex) {
+                Console.Write(ex.Message);
+            }
+
+        }
+        await UpdateStorages();
+        StateHasChanged();
+    }
+
+    private async Task UpdateStorages() {
+        try {
+            var storages = await Http.GetFromJsonAsync<List<Storage>>("api/storages");
+            if(storages is not null) {
+                nestedStorages = storages;
+            }
+        } catch (AccessTokenNotAvailableException exception) {
+            exception.Redirect();
+        } catch (Exception ex) {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

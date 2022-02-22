@@ -1,0 +1,103 @@
+﻿@using Core.Models
+
+@if (CreateDialogOpen) {
+    <DialogComponent Title="Create" OnClose="@OnCreateDialogClose">
+        <ItemFormComponent Item="@currentItem" />
+    </DialogComponent>
+}
+
+@if (UpdateDialogOpen) {
+    <DialogComponent Title="Update" OnClose="@OnUpdateDialogClose">
+        <ItemFormComponent Item=@currentItem/>
+    </DialogComponent>
+}
+
+@if (DeleteDialogOpen) {
+    <DialogComponent Title="Delete" OnClose="@OnDeleteDialogClose">
+        Do you want to delete this entry?
+    </DialogComponent>
+}
+
+
+<div class="container">
+    <h3 class="p-3 text-center">Items list</h3>
+    <a></a>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Classification</th>
+                <th>Serial Number</th>
+                <th>Weight</th>
+                <th>Size</th>
+                <th><button type="button" class="btn" @onclick="() => OpenCreateDialog()">Create</button></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>
+                    <td>@item.ImageId</td>
+                    <td>@item.Title</td>
+                    <td>@item.ItemOwner</td>
+                    <td>@item.Classification</td>
+                    <td>@item.SerialNumber</td>
+                    <td>@item.Weight</td>
+                    <td>@item.Height</td>
+                    <td>
+                        <button type="button" class="btn" @onclick="() => OpenUpdateDialog(item)">Edit</button>
+                        <button type="button" class="btn" @onclick="() => OpenDeleteDialog(item)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public List<Item> Items { get; set; } = new List<Item>();
+
+    private Item currentItem = new Item();
+
+
+    public bool DeleteDialogOpen { get; set; }
+
+    private void OpenDeleteDialog(Item item) {
+        DeleteDialogOpen = true;
+        StateHasChanged();
+    }
+    private async Task OnDeleteDialogClose(bool accepted) {
+        DeleteDialogOpen = false;
+        StateHasChanged();
+    }
+
+    public bool CreateDialogOpen { get; set; }
+
+    private void OpenCreateDialog() {
+        CreateDialogOpen = true;
+        StateHasChanged();
+    }
+
+    private async Task OnCreateDialogClose(bool accepted) {
+        CreateDialogOpen = false;
+        StateHasChanged();
+    }
+
+    public bool UpdateDialogOpen { get; set; }
+
+    private void OpenUpdateDialog(Item item) {
+        currentItem = item;
+        UpdateDialogOpen = true;
+        StateHasChanged();
+    }
+
+    private async Task OnUpdateDialogClose(bool accepted) {
+        UpdateDialogOpen = false;
+        StateHasChanged();
+    }
+
+}

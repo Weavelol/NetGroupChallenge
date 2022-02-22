@@ -1,0 +1,17 @@
+﻿@using Core.Models
+
+<EditForm Model="@Storage">
+    <div class="form-group row">
+        <label for="Name" class="col-sm-4 col-form-label">Title</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=Storage.Title class="form-control" id="Name"/>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public Storage Storage { get; set; }
+
+}

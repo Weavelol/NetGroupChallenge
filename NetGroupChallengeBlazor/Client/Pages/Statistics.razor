@@ -1,0 +1,12 @@
+﻿@page "/statistics"
+@using Microsoft.AspNetCore.Authorization 
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize(Roles = "Admin")] 
+@inject HttpClient Http
+
+
+<h3>Welcome to Statistics page</h3>
+
+@code {
+
+}

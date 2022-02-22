@@ -1,0 +1,30 @@
+﻿@page "/items"
+@using Microsoft.AspNetCore.Authorization 
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Core.Models
+@using NetGroupChallengeBlazor.Client.Components
+@attribute [Authorize(Roles = "User, Admin")]
+@inject HttpClient Http
+
+
+<ItemsListComponent Items="@ItemsList">
+
+</ItemsListComponent>
+
+@code {
+    private List<Item> ItemsList = new List<Item> {
+        new Item {
+            Id = Guid.NewGuid(),
+            Title = "TestItem",
+            StorageId = Guid.NewGuid(),
+            ImageId = Guid.NewGuid(),
+            SerialNumber = "TestSerialNumber",
+            Classification = "TestClassification",
+            ItemOwner = "TestOwner",
+            Weight = 10,
+            Length = 10,
+            Width = 10,
+            Height = 10
+        }
+    };
+}

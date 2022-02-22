@@ -1,0 +1,72 @@
+﻿@using Core.Models
+
+<EditForm Model="@Item">
+    <div class="form-group row">
+        <label for="Title" class="col-sm-4 col-form-label">Title</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=Item.Title class="form-control" id="Title" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Image" class="col-sm-4 col-form-label">Image</label>
+        <div class="col-sm-8">
+            <InputFile></InputFile>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="SerialNumber" class="col-sm-4 col-form-label">SerialNumber</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=Item.SerialNumber class="form-control" id="SerialNumber" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Classification" class="col-sm-4 col-form-label">Classification</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=Item.Classification class="form-control" id="Classification" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="ItemOwner" class="col-sm-4 col-form-label">ItemOwner</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=Item.ItemOwner class="form-control" id="ItemOwner" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Weight" class="col-sm-4 col-form-label">Weight</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value="Item.Weight" class="form-control" id="Weight" />
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <label for="Length" class="col-sm-4 col-form-label">Length</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value="Item.Length" class="form-control" id="Length" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Width" class="col-sm-4 col-form-label">Width</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value="Item.Width" class="form-control" id="Width" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Height" class="col-sm-4 col-form-label">Height</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value="Item.Height" class="form-control" id="Height" />
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public Item Item{ get; set; }
+}

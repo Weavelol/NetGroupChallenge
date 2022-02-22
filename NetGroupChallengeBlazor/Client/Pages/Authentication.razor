@@ -1,0 +1,13 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using NetGroupChallengeBlazor.Client.Components
+
+<RemoteAuthenticatorView Action="@Action">
+    <LogOutSucceeded>
+        <CustomLoggedOut /> 
+    </LogOutSucceeded>
+</RemoteAuthenticatorView>
+
+@code{
+    [Parameter] public string? Action { get; set; }
+}
