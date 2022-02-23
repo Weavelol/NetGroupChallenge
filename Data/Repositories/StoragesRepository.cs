@@ -8,11 +8,14 @@ using Core.Exceptions;
 
 namespace Data.Repositories {
     public class StoragesRepository : AbstractRepository<Storage>, IStoragesRepository {
-        public StoragesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
-            : base(context, httpContextAccessor) { }
+        private readonly string userId;
 
-        public override async Task<IEnumerable<Storage>> GetByConditionAsync(Expression<Func<Storage, bool>>? expression = null) {
-            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        public StoragesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
+            : base(context, httpContextAccessor) {
+            userId = HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
+        public override async Task<IEnumerable<Storage>> GetByConditionAsync(Expression<Func<Storage, bool>> expression) {
             return await Context.Set<Storage>()
                 .Where(x => x.OwnerId == userId)
                 .Where(expression)
@@ -28,7 +31,6 @@ namespace Data.Repositories {
             if (storage is null) {
                 throw new NullReferenceException("Source Item wasn't provided.");
             }
-            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             storage.OwnerId = userId;
 
             if (storage.ParentStorageId == Guid.Empty) {
@@ -44,18 +46,9 @@ namespace Data.Repositories {
             return await GetByIdAsync(newItem.Entity.Id);
         }
 
-        public override async Task<IEnumerable<Storage>> GetAllAsync() {
-            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return await Context.Set<Storage>()
-                .Where(x => x.OwnerId == userId)
-                .AsNoTracking()
-                .Include(x => x.ParentStorage)
-                .Include(x => x.NestedStorages)
-                .ToListAsync();
-        }
+        
 
         public override async Task<Storage> GetByIdAsync(Guid id) {
-            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
             if(userId is null) {
                 throw new NotAuthorizedException("there is no authorized user in system.");

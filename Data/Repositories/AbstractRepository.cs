@@ -16,7 +16,9 @@ namespace Data.Repositories {
             HttpContextAccessor = httpContextAccessor;
         }
 
-        public abstract Task<IEnumerable<T>> GetAllAsync();
+        public async Task<IEnumerable<T>> GetAllAsync() {
+            return await GetByConditionAsync(x => true);
+        }
         public abstract Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression);
         public abstract Task<T> CreateAsync(T item);
 

@@ -12,23 +12,6 @@ namespace Data.Repositories {
         public ItemsRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
             : base(context, httpContextAccessor) { }
 
-        public override async Task<Item> CreateAsync(Item item) {
-            item.ParentStorage = null;
-            var created = await Context.AddAsync(item);
-            await SaveChangesAsync();
-            return await GetByIdAsync(created.Entity.Id);
-        }
-
-        public override async Task<IEnumerable<Item>> GetAllAsync() {
-            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return await Context.Set<Item>()
-                .Include(x => x.ParentStorage)
-                .Where(x => x.ParentStorage.OwnerId == userId)
-                .AsNoTracking()
-                .Include(x => x.Image)
-                .ToListAsync();
-        }
-
         public override async Task<IEnumerable<Item>> GetByConditionAsync(Expression<Func<Item, bool>> expression) {
             var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await Context.Set<Item>()
@@ -38,6 +21,13 @@ namespace Data.Repositories {
                 .Include(x => x.Image)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public override async Task<Item> CreateAsync(Item item) {
+            item.ParentStorage = null;
+            var created = await Context.AddAsync(item);
+            await SaveChangesAsync();
+            return await GetByIdAsync(created.Entity.Id);
         }
 
 
