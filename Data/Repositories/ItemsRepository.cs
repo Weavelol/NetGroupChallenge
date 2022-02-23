@@ -53,5 +53,12 @@ namespace Data.Repositories {
             Context.Set<Item>().Update(item);
             await SaveChangesAsync();
         }
+
+        public override async Task DeleteAsync(Guid id) {
+            var item = await GetByIdAsync(id);
+            Context.Set<ItemImage>().Remove(item.Image);
+            Context.Set<Item>().Remove(item);
+            await SaveChangesAsync();
+        }
     }
 }

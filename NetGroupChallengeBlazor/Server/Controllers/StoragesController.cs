@@ -24,21 +24,21 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         // GET api/storages/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid id) {
-            var storage = await storagesService.GetStorageByIdAsync(id);
+            var storage = await storagesService.GetByIdAsync(id);
             return Ok(storage);
         }
 
         // POST api/storages
         [HttpPost]
         public async Task<ActionResult<Storage>> PostAsync([FromBody] Storage storage) {
-            var createdStorage = await storagesService.CreateEntityAsync(storage);
+            var createdStorage = await storagesService.CreateAsync(storage);
             return Created(nameof(GetAllAsync), createdStorage);
         }
 
         // DELETE api/storages/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id) {
-            await storagesService.DeleteEntityAsync(id);
+            await storagesService.DeleteAsync(id);
             return NoContent();
         }
     }

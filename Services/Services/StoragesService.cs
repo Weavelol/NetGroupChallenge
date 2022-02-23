@@ -9,15 +9,11 @@ namespace Services.Services {
             this.storagesRepository = storagesRepository;
         }
 
-        public override async Task DeleteEntityAsync(Guid id) {
-            await Repository.DeleteAsync(id);
-        }
-
         public override async Task<IEnumerable<Storage>> GetAllAsync() {
             return await storagesRepository.GetAllAsync();
         }
 
-        public async Task<Storage> GetStorageByIdAsync(Guid id) {
+        public override async Task<Storage> GetByIdAsync(Guid id) {
             return await storagesRepository.GetStorageByIdAsync(id);
         }
     }

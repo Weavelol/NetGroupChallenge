@@ -11,18 +11,16 @@ namespace Services.Services {
         }
 
         public abstract Task<IEnumerable<T>> GetAllAsync();
-        public abstract Task DeleteEntityAsync(Guid id);
+        public virtual async Task DeleteAsync(Guid id) {
+            await Repository.DeleteAsync(id);
+        }
 
-        public async Task<T> GetByIdAsync(Guid id) {
+        public virtual async Task<T> GetByIdAsync(Guid id) {
             return await Repository.GetByIdAsync(id);
         }
 
-        public async Task<T> CreateEntityAsync(T entity) {
+        public async Task<T> CreateAsync(T entity) {
             return await Repository.CreateAsync(entity);
-        }
-
-        public async Task<bool> ExistsAsync(Guid id) {
-            return await Repository.ExistsAsync(id);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         // POST api/items
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Item item) {
-            var created = await itemsService.CreateEntityAsync(item);
+            var created = await itemsService.CreateAsync(item);
             return Created(nameof(GetAsync), created);
         }
 
@@ -45,7 +45,7 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         // DELETE api/items/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) {
-            await itemsService.DeleteEntityAsync(id);
+            await itemsService.DeleteAsync(id);
             return NoContent();
         }
     }

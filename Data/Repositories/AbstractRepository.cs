@@ -3,7 +3,6 @@ using Core.Models;
 using Core.Exceptions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 
 namespace Data.Repositories {
@@ -29,11 +28,10 @@ namespace Data.Repositories {
             return items.FirstOrDefault();
         }
         
-        public async Task DeleteAsync(Guid id) {
+        public virtual async Task DeleteAsync(Guid id) {
             var item = await GetByIdAsync(id);
             Context.Set<T>().Remove(item);
             await SaveChangesAsync();
-
         }
 
         public async Task<bool> ExistsAsync(Guid id) {

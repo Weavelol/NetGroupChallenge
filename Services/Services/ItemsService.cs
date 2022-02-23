@@ -4,17 +4,12 @@ using Data.Interfaces;
 
 namespace Services.Services {
     public class ItemsService : AbstractService<Item>, IItemsService {
-        private readonly IImagesRepository imagesRepository;
         private readonly IItemsRepository itemsRepository;
-        public ItemsService(IItemsRepository itemsRepository, IImagesRepository imagesRepository) : base(itemsRepository){
-            this.imagesRepository = imagesRepository;
+        public ItemsService(IItemsRepository itemsRepository) : base(itemsRepository){
             this.itemsRepository = itemsRepository;
         }
 
-        public override async Task DeleteEntityAsync(Guid id) {
-            var item = await Repository.GetByIdAsync(id);
-
-            await imagesRepository.DeleteAsync(item.ImageId);
+        public override async Task DeleteAsync(Guid id) {
             await itemsRepository.DeleteAsync(id);
         }
 
