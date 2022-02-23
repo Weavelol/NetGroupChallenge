@@ -8,7 +8,6 @@ using Services.Services;
 namespace NetGroupChallengeBlazor.Server.Extensions {
     public static class ServicesExtension {
         public static void ConfigureRepositories(this IServiceCollection services) {
-            services.AddTransient<IImagesRepository, ImagesRepository>();
             services.AddTransient<IStoragesRepository, StoragesRepository>();
             services.AddTransient<IItemsRepository, ItemsRepository>();
         }
