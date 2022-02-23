@@ -18,7 +18,7 @@ namespace Services.Services {
         }
 
         public async Task UpdateAsync(Item item) {
-            await itemsRepository.UpdateItemAsync(item);
+            await itemsRepository.UpdateAsync(item);
         }
     }
 }

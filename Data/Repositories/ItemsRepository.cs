@@ -40,10 +40,8 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Item>> GetItemsOfStorage(Guid? storageId) {
-            return await GetByConditionAsync(x => x.ParentStorage.Id == storageId);
-        }
-        public async Task UpdateItemAsync(Item item) {
+
+        public async Task UpdateAsync(Item item) {
             if (item is null) {
                 throw new NullReferenceException("Source Item wasn't provided.");
             }

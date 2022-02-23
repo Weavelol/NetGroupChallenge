@@ -22,12 +22,7 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentStorageId) {
-            if (parentStorageId == Guid.Empty) {
-                return GetByConditionAsync(x => x.ParentStorageId == null);
-            }
-            return GetByConditionAsync(x => x.ParentStorageId == parentStorageId);
-        }
+        
 
         public override async Task<Storage> CreateAsync(Storage storage) {
             if (storage is null) {
@@ -78,6 +73,14 @@ namespace Data.Repositories {
                 return dummyStorage;
             }
             return await GetByIdAsync(id);
+        }
+
+
+        private Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentStorageId) {
+            if (parentStorageId == Guid.Empty) {
+                return GetByConditionAsync(x => x.ParentStorageId == null);
+            }
+            return GetByConditionAsync(x => x.ParentStorageId == parentStorageId);
         }
     }
 }
