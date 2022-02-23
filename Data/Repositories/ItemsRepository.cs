@@ -50,7 +50,7 @@ namespace Data.Repositories {
             if (!await ExistsAsync(item.Id)) {
                 throw new EntityNotFoundException($"There is no entity with id: {item.Id}");
             }
-            var updatedItem = Context.Set<Item>().Update(item);
+            Context.Set<Item>().Update(item);
             await SaveChangesAsync();
         }
     }

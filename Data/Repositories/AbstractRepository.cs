@@ -19,6 +19,7 @@ namespace Data.Repositories {
 
         public abstract Task<IEnumerable<T>> GetAllAsync();
         public abstract Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression);
+        public abstract Task<T> CreateAsync(T item);
 
         public async Task<T> GetByIdAsync(Guid id) {
             var items = await GetByConditionAsync(x => x.Id == id);
@@ -27,7 +28,7 @@ namespace Data.Repositories {
             }
             return items.FirstOrDefault();
         }
-        public abstract Task<T> CreateAsync(T item);
+        
         public async Task DeleteAsync(Guid id) {
             var item = await GetByIdAsync(id);
             Context.Set<T>().Remove(item);
@@ -38,6 +39,7 @@ namespace Data.Repositories {
         public async Task<bool> ExistsAsync(Guid id) {
             return await Context.Set<T>().AnyAsync(x => x.Id == id);
         }
+
         public async Task SaveChangesAsync() {
             await Context.SaveChangesAsync();
         }

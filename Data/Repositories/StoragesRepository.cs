@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Core.Exceptions;
 
 namespace Data.Repositories {
     public class StoragesRepository : AbstractRepository<Storage>, IStoragesRepository {
@@ -60,6 +61,11 @@ namespace Data.Repositories {
 
         public async Task<Storage> GetStorageByIdAsync(Guid id) {
             var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if(userId is null) {
+                throw new NotAuthorizedException("there is no authorized user in system.");
+            }
+
             if (id == Guid.Empty) {
                 var nested = await GetNestedStoragesAsync(Guid.Empty);
                 var dummyStorage = new Storage {
