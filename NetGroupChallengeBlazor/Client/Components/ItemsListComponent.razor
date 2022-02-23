@@ -1,5 +1,6 @@
 ﻿@using Core.Models
-@inject HttpClient Http
+@using BlazorClientServices.Interfaces
+@inject IApiService apiService
 
 @if (CreateDialogOpen) {
     <DialogComponent Title="Create" OnClose="@OnCreateDialogClose">
@@ -28,6 +29,7 @@
             <tr>
                 <th>Image</th>
                 <th>Title</th>
+                <th>Storage</th>
                 <th>Owner</th>
                 <th>Classification</th>
                 <th>Serial Number</th>
@@ -45,6 +47,7 @@
                         <img src="@CreateImage(item.Image)"/>
                     </td>
                     <td>@item.Title</td>
+                    <td>@item.ParentStorage.StoragePath</td>
                     <td>@item.ItemOwner</td>
                     <td>@item.Classification</td>
                     <td>@item.SerialNumber</td>
@@ -68,12 +71,7 @@
 
     private Item currentItem = new Item();
 
-    protected override async Task OnInitializedAsync() {
-
-    }
-
-    public bool DeleteDialogOpen { get; set; }
-
+    private bool DeleteDialogOpen { get; set; }
     private void OpenDeleteDialog(Item item) {
         DeleteDialogOpen = true;
         currentItem = item;
@@ -82,71 +80,46 @@
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
         if (accepted) {
-            await Http.DeleteAsync($"api/items/{currentItem.Id}");
+            await apiService.DeleteAsync($"api/items/{currentItem.Id}");
+            await OnUpdateCallback.InvokeAsync();
+            StateHasChanged();
         }
-        await UpdateItems();
-        StateHasChanged();
     }
 
-    public bool CreateDialogOpen { get; set; }
-
+    private bool CreateDialogOpen { get; set; }
     private void OpenCreateDialog() {
         CreateDialogOpen = true;
         currentItem = new Item();
         StateHasChanged();
     }
-
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
-            try {
-                var storage = currentItem.ParentStorage;
-                await Http.PostAsJsonAsync<Item>("api/items", currentItem);
-            }
-            catch(Exception ex) {
-                Console.Write(ex.Message);
-            }
+            await apiService.PostItemAsync("api/items", currentItem);
+            await OnUpdateCallback.InvokeAsync();
+            StateHasChanged();
         }
-        await UpdateItems();
-        StateHasChanged();
     }
 
-    public bool UpdateDialogOpen { get; set; }
-
+    private bool UpdateDialogOpen { get; set; }
     private void OpenUpdateDialog(Item item) {
         currentItem = item;
         UpdateDialogOpen = true;
         StateHasChanged();
     }
-
     private async Task OnUpdateDialogClose(bool accepted) {
         UpdateDialogOpen = false;
         if (accepted) {
-            try {
-                var response = Http.PutAsJsonAsync<Item>($"api/items", currentItem);
-            }
-            catch(Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
+            await apiService.PutItemAsync($"api/items", currentItem);
+            await OnUpdateCallback.InvokeAsync();
+            StateHasChanged();
         }
-        await UpdateItems();
-        StateHasChanged();
     }
 
-    private async Task UpdateItems() {
-        await OnUpdateCallback.InvokeAsync();
-    }
 
     private string CreateImage(ItemImage image) {
-        try {
-            string imageBase64Data = Convert.ToBase64String(image.ImageData);
-            string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
-            return imageDataURL;
-        } 
-        catch (Exception ex){
-            Console.WriteLine(ex.Message);
-            return string.Empty;
-        }
-        
+        string imageBase64Data = Convert.ToBase64String(image.ImageData);
+        string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+        return imageDataURL;
     }
 }

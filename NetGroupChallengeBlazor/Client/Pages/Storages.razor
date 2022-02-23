@@ -2,17 +2,9 @@
 @using Core.Models
 @using NetGroupChallengeBlazor.Client.Components
 @using Microsoft.AspNetCore.Authorization 
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using System.Net.Http;
-@using Newtonsoft.Json;
-@using System.Text.Json;
-@using System;
-@using System.Threading.Tasks;
-@using System.Text
-@using System.Net.Mime
-@using System.Text.Json.Serialization
+@using BlazorClientServices.Interfaces
 @attribute [Authorize(Roles = "User, Admin")]
-@inject HttpClient Http
+@inject IApiService apiService
 
 
 @if (CreateDialogOpen) {
@@ -57,10 +49,7 @@
 
 @code {
     [Parameter]
-    public Storage CurrentStorage { get; set; } = new Storage {
-        Id = Guid.Empty,
-
-    };
+    public Storage CurrentStorage { get; set; } = new Storage();
 
 
     private List<Storage> nestedStorages = new List<Storage>();
@@ -72,8 +61,8 @@
         await UpdateStorages();
     }
 
-    public bool DeleteDialogOpen { get; set; }
 
+    private bool DeleteDialogOpen { get; set; }
     private void OpenDeleteDialog(Storage storage) {
         DeleteDialogOpen = true;
         deleteStorage = storage;
@@ -82,58 +71,40 @@
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
         if (accepted) {
-            await Http.DeleteAsync($"api/storages/{deleteStorage.Id}");
+            await apiService.DeleteAsync($"api/storages/{deleteStorage.Id}");
+            await UpdateStorages();
+            StateHasChanged();
         }
-        await UpdateStorages();
-        StateHasChanged();
     }
 
 
-    public bool CreateDialogOpen { get; set; }
-
+    private bool CreateDialogOpen { get; set; }
     private void OpenCreateDialog() {
         CreateDialogOpen = true;
-        newStorage = new Storage {
-                ParentStorageId = CurrentStorage.Id,
-                Id = Guid.Empty,
-                OwnerId = Guid.Empty.ToString(),
-                StoragePath = string.Empty,
-                NestedStorages = new List<Storage>()
-        };
+        newStorage = new Storage();
         if(CurrentStorage.Id != Guid.Empty) {
             newStorage.ParentStorage = CurrentStorage;
+            newStorage.ParentStorageId = CurrentStorage.Id;
         }
         StateHasChanged();
     }
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
-            try {
-                var x = await Http.PostAsJsonAsync<Storage>("api/storages", newStorage);
-
-            }
-            catch(Exception ex) {
-                Console.Write(ex.Message);
-            }
-        }
-        await UpdateStorages();
-        StateHasChanged();
-    }
-
-    private async Task SelectPreviousStorage() {
-        if(CurrentStorage.ParentStorageId is null) {
-            var storage = new Storage {
-                Id = Guid.Empty,
-                Title = string.Empty,
-            };
-            await UpdateCurrentStorage(storage);
-        } else {
-            var storage = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.ParentStorageId}");
-            await UpdateCurrentStorage(storage);
+            await apiService.PostStorageAsync("api/storages", newStorage);
+            await UpdateStorages();
+            StateHasChanged();
         }
     }
 
     private async Task SelectNextStorage(Storage storage) {
+        await UpdateCurrentStorage(storage);
+    }
+    private async Task SelectPreviousStorage() {
+        var storage = new Storage();
+        if(CurrentStorage.ParentStorageId is not null) {
+            storage = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.ParentStorageId}");
+        } 
         await UpdateCurrentStorage(storage);
     }
 
@@ -143,16 +114,7 @@
     }
 
     private async Task UpdateStorages() {
-        try {
-            var storages = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.Id}");
-             
-             if(storages is not null) {
-                 nestedStorages = storages.NestedStorages;
-             }
-        } catch (AccessTokenNotAvailableException exception) {
-            exception.Redirect();
-        } catch (Exception ex) {
-            Console.WriteLine(ex.Message);
-        }
+        var storages = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.Id}");
+        nestedStorages = storages.NestedStorages;
     }
 }

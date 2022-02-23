@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using NetGroupChallengeBlazor.Client;
+using BlazorClientServices.Interfaces;
+using BlazorClientServices.Services;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -16,5 +19,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
     .CreateClient("NetGroupChallengeBlazor.ServerAPI"));
 
 builder.Services.AddApiAuthorization();
+
+builder.Services.AddTransient<IApiService, ApiService>();
 
 await builder.Build().RunAsync();

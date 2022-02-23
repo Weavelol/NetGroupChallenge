@@ -1,7 +1,6 @@
 ﻿using Data.Interfaces;
 using Core.Models;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Core.Exceptions;

@@ -1,5 +1,6 @@
 ﻿@using Core.Models
-@inject HttpClient Http
+@using BlazorClientServices.Interfaces
+@inject IApiService apiService
 
 
 <EditForm Model="@Item">
@@ -86,11 +87,8 @@
 
     private Dictionary<Guid, Storage> storagesDict = new Dictionary<Guid, Storage>();
     private List<Storage> storages = new List<Storage>();
-
     private Guid StorageId {
-        get {
-            return Item.StorageId;
-        }
+        get { return Item.StorageId; }
         set {
             if (storagesDict.TryGetValue(value, out var storage)) {
                 Item.ParentStorage = storage;
@@ -99,14 +97,16 @@
         }
     }
 
-
     protected override async Task OnInitializedAsync() {
-
-        storages = await Http.GetFromJsonAsync<List<Storage>>($"api/storages");
+        storages = await apiService.GetStoragesAsync($"api/storages");
 
         foreach(var st in storages) {
             storagesDict.Add(st.Id, st);
         }
+        SetDefaultStorage();
+    }
+
+    private void SetDefaultStorage() {
         if(Item.StorageId == Guid.Empty) {
             Item.ParentStorage = storages.FirstOrDefault();
             Item.StorageId = storages.FirstOrDefault().Id;
@@ -119,13 +119,10 @@
             Id = Guid.Empty,
             Title = e.File.Name,
         };
-
         MemoryStream ms = new MemoryStream();
         using var stream = e.File.OpenReadStream();
         await stream.CopyToAsync(ms);
-
         image.ImageData = ms.ToArray();
-
         ms.Close();
         ms.Dispose();
         Item.Image = image;

@@ -40,7 +40,7 @@ namespace Data.Repositories {
             return items.FirstOrDefault();
         }
         
-        public virtual async Task DeleteAsync(Guid id) {
+        public async Task DeleteAsync(Guid id) {
             var item = await GetByIdAsync(id);
             Context.Set<T>().Remove(item);
             await SaveChangesAsync();

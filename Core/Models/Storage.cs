@@ -5,5 +5,14 @@
         public List<Storage> NestedStorages { get; set; }
         public string OwnerId { get; set; }
         public string StoragePath { get; set; }
+
+        public Storage() {
+            Id = Guid.Empty;
+            OwnerId = Guid.Empty.ToString();
+            StoragePath = string.Empty;
+            Title = string.Empty;
+            NestedStorages = new List<Storage>();
+            ParentStorageId = Guid.Empty;
+        }
     }
 }
