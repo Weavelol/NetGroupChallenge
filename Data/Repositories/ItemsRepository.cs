@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Core.Exceptions;
 
 namespace Data.Repositories {
     public class ItemsRepository : AbstractRepository<Item>, IItemsRepository {
@@ -41,6 +42,16 @@ namespace Data.Repositories {
 
         public async Task<IEnumerable<Item>> GetItemsOfStorage(Guid? storageId) {
             return await GetByConditionAsync(x => x.ParentStorage.Id == storageId);
+        }
+        public async Task UpdateItemAsync(Item item) {
+            if (item is null) {
+                throw new NullReferenceException("Source Item wasn't provided.");
+            }
+            if (!await ExistsAsync(item.Id)) {
+                throw new EntityNotFoundException($"There is no entity with id: {item.Id}");
+            }
+            var updatedItem = Context.Set<Item>().Update(item);
+            await SaveChangesAsync();
         }
     }
 }

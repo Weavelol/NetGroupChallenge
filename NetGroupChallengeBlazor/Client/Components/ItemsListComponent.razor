@@ -92,6 +92,7 @@
 
     private void OpenCreateDialog() {
         CreateDialogOpen = true;
+        currentItem = new Item();
         StateHasChanged();
     }
 
@@ -100,7 +101,7 @@
         if (accepted) {
             try {
                 var storage = currentItem.ParentStorage;
-                var x = await Http.PostAsJsonAsync<Item>("api/items", currentItem);
+                await Http.PostAsJsonAsync<Item>("api/items", currentItem);
             }
             catch(Exception ex) {
                 Console.Write(ex.Message);
@@ -121,7 +122,12 @@
     private async Task OnUpdateDialogClose(bool accepted) {
         UpdateDialogOpen = false;
         if (accepted) {
-            
+            try {
+                var response = Http.PutAsJsonAsync<Item>($"api/items", currentItem);
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
         }
         await UpdateItems();
         StateHasChanged();

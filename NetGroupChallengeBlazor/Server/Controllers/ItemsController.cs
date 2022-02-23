@@ -35,18 +35,18 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
             return Created(nameof(GetAsync), created);
         }
 
-        // PUT api/items/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Item item) {
-            
-            throw new NotImplementedException();
+        // PUT api/items
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] Item item) {
+            await itemsService.UpdateAsync(item);
+            return NoContent();
         }
 
         // DELETE api/items/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) {
             await itemsService.DeleteEntityAsync(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

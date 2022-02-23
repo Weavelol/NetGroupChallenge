@@ -25,5 +25,9 @@ namespace Services.Services {
         public async Task<IEnumerable<Item>> GetItemsOfStorage(Guid? storageId) {
             return await itemsRepository.GetItemsOfStorage(storageId);
         }
+
+        public async Task UpdateAsync(Item item) {
+            await itemsRepository.UpdateItemAsync(item);
+        }
     }
 }

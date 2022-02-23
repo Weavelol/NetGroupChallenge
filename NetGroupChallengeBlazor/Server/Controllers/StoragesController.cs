@@ -24,7 +24,6 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         // GET api/storages/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid id) {
-            //var storages = await storagesService.GetNestedStoragesAsync(id);
             var storage = await storagesService.GetStorageByIdAsync(id);
             return Ok(storage);
         }
@@ -40,7 +39,7 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id) {
             await storagesService.DeleteEntityAsync(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

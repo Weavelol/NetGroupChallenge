@@ -27,25 +27,7 @@ namespace Data.Repositories {
             }
             return items.FirstOrDefault();
         }
-
         public abstract Task<T> CreateAsync(T item);
-        
-        public async Task<T> UpdateAsync(T item) {
-            /* TODO Items Update
-             * if (item is null) {
-                throw new SourceEntityNullException("Source Item wasn't provided.");
-            }
-            if (!await ExistsAsync(item.Id)) {
-                throw new EntityNotFoundException($"There is no entity with id: {item.Id}");
-            }
-            var updatedItem = Context.Set<T>().Update(item);
-            await SaveChangesAsync();
-            return await GetByIdAsync(updatedItem.Entity.Id);
-
-             * 
-             */
-            throw new NotImplementedException();
-        }
         public async Task DeleteAsync(Guid id) {
             var item = await GetByIdAsync(id);
             Context.Set<T>().Remove(item);
