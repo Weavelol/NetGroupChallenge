@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 using Core.Models;
 
 namespace Data.Interfaces {
-    internal interface IItemsRepository : IRepository<Item> {
+    public interface IItemsRepository : IRepository<Item> {
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Services.Interfaces {
-    internal interface IService {
+﻿namespace Services.Interfaces {
+    public interface IService<T> {
+        public Task<T> GetByIdAsync(Guid Id);
+        public Task<T> CreateEntityAsync(T entity);
+        public Task DeleteEntityAsync(Guid Id);
+        public Task<bool> ExistsAsync(Guid id);
     }
 }

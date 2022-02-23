@@ -5,6 +5,7 @@ using Core.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Services.Interfaces;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {
     [Authorize]
@@ -12,38 +13,23 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
     [ApiController]
     public class StoragesController : ControllerBase {
         private ApplicationDbContext context;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IStoragesService storagesService;
 
-        public StoragesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) { 
+        public StoragesController(ApplicationDbContext context, IStoragesService storagesService) { 
             this.context = context;
-            this.userManager = userManager;
+            this.storagesService = storagesService;
         }
 
         // GET api/storages
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Storage>>> GetAllAsync() {
-            var storages = await context.Storages
-                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                    .Include(x => x.ParentStorage)
-                    .ToListAsync();
+            var storages = await storagesService.GetAllAsync();
             return Ok(storages);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid? Id) {
-            if(Id is null || Id == Guid.Empty) {
-                var storages2 = await context.Storages
-                    .Where(x => x.ParentStorageId == null)
-                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                    .ToListAsync();
-                return Ok(storages2);
-            }
-
-            var storages = await context.Storages
-                    .Where(x => x.ParentStorageId == Id)
-                    .Where(x => x.OwnerId == User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                    .Include(x => x.ParentStorage)
-                    .ToListAsync();
+        public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid? id) {
+            var storages = await storagesService.GetNestedStoragesAsync(id);
             return Ok(storages);
         }
 

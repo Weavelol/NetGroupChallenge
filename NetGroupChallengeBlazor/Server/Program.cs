@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NetGroupChallengeBlazor.Server.Extensions;
 using Data;
 using Core.Models;
 
@@ -29,6 +30,10 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.ConfigureRepositories();
+builder.Services.ConfigureServices();
 
 var app = builder.Build();
 
