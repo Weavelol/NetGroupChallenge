@@ -14,7 +14,7 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class ItemsController : ControllerBase {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ItemsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) {
