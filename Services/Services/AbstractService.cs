@@ -15,7 +15,7 @@ namespace Services.Services {
             await Repository.DeleteAsync(id);
         }
 
-        public virtual async Task<T> GetByIdAsync(Guid id) {
+        public async Task<T> GetByIdAsync(Guid id) {
             return await Repository.GetByIdAsync(id);
         }
 

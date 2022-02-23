@@ -20,7 +20,7 @@ namespace Data.Repositories {
         public abstract Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression);
         public abstract Task<T> CreateAsync(T item);
 
-        public async Task<T> GetByIdAsync(Guid id) {
+        public virtual async Task<T> GetByIdAsync(Guid id) {
             var items = await GetByConditionAsync(x => x.Id == id);
             if (items is null || !items.Any()) {
                 throw new EntityNotFoundException($"There is no entity with id: {id}");

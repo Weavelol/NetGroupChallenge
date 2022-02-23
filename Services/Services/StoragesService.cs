@@ -12,9 +12,5 @@ namespace Services.Services {
         public override async Task<IEnumerable<Storage>> GetAllAsync() {
             return await storagesRepository.GetAllAsync();
         }
-
-        public override async Task<Storage> GetByIdAsync(Guid id) {
-            return await storagesRepository.GetStorageByIdAsync(id);
-        }
     }
 }

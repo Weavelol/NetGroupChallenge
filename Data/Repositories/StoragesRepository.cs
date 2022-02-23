@@ -54,7 +54,7 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public async Task<Storage> GetStorageByIdAsync(Guid id) {
+        public override async Task<Storage> GetByIdAsync(Guid id) {
             var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
             if(userId is null) {
@@ -72,7 +72,11 @@ namespace Data.Repositories {
                 };
                 return dummyStorage;
             }
-            return await GetByIdAsync(id);
+            var items = await GetByConditionAsync(x => x.Id == id);
+            if (items is null || !items.Any()) {
+                throw new EntityNotFoundException($"There is no entity with id: {id}");
+            }
+            return items.FirstOrDefault();
         }
 
 
