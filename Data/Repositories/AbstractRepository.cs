@@ -17,14 +17,12 @@ namespace Data.Repositories {
             HttpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync() {
-            return await GetByConditionAsync();
-        }
-        public abstract Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>>? expression = null);
+        public abstract Task<IEnumerable<T>> GetAllAsync();
+        public abstract Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression);
 
         public async Task<T> GetByIdAsync(Guid id) {
             var items = await GetByConditionAsync(x => x.Id == id);
-            if (!items.Any()) {
+            if (items is null || !items.Any()) {
                 throw new EntityNotFoundException($"There is no entity with id: {id}");
             }
             return items.FirstOrDefault();

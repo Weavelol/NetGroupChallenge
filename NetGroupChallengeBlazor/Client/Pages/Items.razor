@@ -7,7 +7,7 @@
 @inject HttpClient Http
 
 
-<ItemsListComponent Items="@ItemsList">
+<ItemsListComponent Items="@ItemsList" OnUpdateCallback="@UpdateItemsAsync">
 
 </ItemsListComponent>
 
@@ -16,10 +16,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await UpdateItems();
+        await UpdateItemsAsync();
     }
 
-    private async Task UpdateItems() {
+    private async Task UpdateItemsAsync() {
         try {
             var items = await Http.GetFromJsonAsync<List<Item>>($"api/items");
             if(items is not null) {

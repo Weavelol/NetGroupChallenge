@@ -13,5 +13,9 @@ namespace Services.Services {
         public ImagesService(IImagesRepository imagesRepository) : base(imagesRepository){
             this.imagesRepository = imagesRepository;
         }
+
+        public override async Task DeleteEntityAsync(Guid id) {
+            await Repository.DeleteAsync(id);
+        }
     }
 }

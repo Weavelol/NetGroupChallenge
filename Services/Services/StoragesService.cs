@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Services.Interfaces;
+﻿using Services.Interfaces;
 using Core.Models;
 using Data.Interfaces;
 
@@ -12,6 +7,10 @@ namespace Services.Services {
         private readonly IStoragesRepository storagesRepository;
         public StoragesService(IStoragesRepository storagesRepository) : base(storagesRepository){
             this.storagesRepository = storagesRepository;
+        }
+
+        public override async Task DeleteEntityAsync(Guid id) {
+            await Repository.DeleteAsync(id);
         }
 
         public async Task<IEnumerable<Storage>> GetAllAsync() {

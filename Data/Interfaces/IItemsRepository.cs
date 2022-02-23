@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Models;
+﻿using Core.Models;
 
 namespace Data.Interfaces {
     public interface IItemsRepository : IRepository<Item> {
+        public Task<IEnumerable<Item>> GetItemsOfStorage(Guid? storageId);
     }
 }

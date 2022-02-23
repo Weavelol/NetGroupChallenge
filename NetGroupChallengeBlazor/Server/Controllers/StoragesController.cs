@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Data;
 using Core.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {

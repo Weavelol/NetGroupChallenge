@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Models;
+﻿using Core.Models;
 
 namespace Services.Interfaces {
     public interface IItemsService : IService<Item> {
-
+        public Task<IEnumerable<Item>> GetAllAsync();
+        public Task<IEnumerable<Item>> GetItemsOfStorage(Guid? storageId);
     }
 }

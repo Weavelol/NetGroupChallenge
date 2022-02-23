@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data.Interfaces;
+﻿using Data.Interfaces;
 using Core.Models;
 using System.Linq.Expressions;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
@@ -51,6 +45,15 @@ namespace Data.Repositories {
             var newItem = await Context.AddAsync(storage);
             await SaveChangesAsync();
             return await GetByIdAsync(newItem.Entity.Id);
+        }
+
+        public override async Task<IEnumerable<Storage>> GetAllAsync() {
+            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return await Context.Set<Storage>()
+                .Where(x => x.OwnerId == userId)
+                .AsNoTracking()
+                .Include(x => x.ParentStorage)
+                .ToListAsync();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Data.Interfaces;
 using Core.Models;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 
 namespace Data.Repositories {
@@ -12,8 +14,17 @@ namespace Data.Repositories {
             throw new NotImplementedException();
         }
 
-        public override Task<IEnumerable<ItemImage>> GetByConditionAsync(Expression<Func<ItemImage, bool>> expression) {
-            throw new NotImplementedException();
+        public override async Task<IEnumerable<ItemImage>> GetAllAsync() {
+            return await Context.Set<ItemImage>()
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public override async Task<IEnumerable<ItemImage>> GetByConditionAsync(Expression<Func<ItemImage, bool>> expression) {
+            return await Context.Set<ItemImage>()
+                .Where(expression)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

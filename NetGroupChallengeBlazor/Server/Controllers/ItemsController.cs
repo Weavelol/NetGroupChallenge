@@ -1,98 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Core.Models;
-using Data;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Services.Interfaces;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ItemsController : ControllerBase {
-        private readonly ApplicationDbContext context;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IItemsService itemsService;
 
-        public ItemsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) {
-            this.context = context;
-            this.userManager = userManager;
+        public ItemsController(IItemsService itemsService) {
+            this.itemsService = itemsService;
         }
 
-        // GET: api/<ItemsController>
+        // GET: api/items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> Get() {
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var items = await context.Items
-                .Include(x => x.ParentStorage)
-                .Where(x => x.ParentStorage.OwnerId == currentUserId)
-                .Include(x => x.Image)
-                .ToListAsync();
+        public async Task<ActionResult<IEnumerable<Item>>> GetAsync() {
+            var items = await itemsService.GetAllAsync();
             return Ok(items);
         }
 
-        // GET api/<ItemsController>/5
+        // GET api/items/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Item>> GetAsync(Guid id) {
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var item = await context.Items
-                .Where(x => x.Id == id)
-                .Include(x => x.ParentStorage)
-                .Where(x => x.ParentStorage.OwnerId == currentUserId)
-                .Include(x => x.Image)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
+            var item = await itemsService.GetByIdAsync(id);
             return Ok(item);
         }
 
-        // POST api/<ItemsController>
+        // POST api/items
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Item item) {
-            /*
-             * Add Image to DB
-             * Add Image Id to Item
-             */
-            var image = await context.ItemsImages.AddAsync(item.Image);
-
-            item.Image = null;
-            item.ParentStorage = null;
-            item.ImageId = image.Entity.Id;
-           
-            await context.AddAsync(item);
-            await context.SaveChangesAsync();
-
-            return Created(nameof(GetAsync), item);
+            var created = await itemsService.CreateEntityAsync(item);
+            return Created(nameof(GetAsync), created);
         }
 
-        // PUT api/<ItemsController>/5
+        // PUT api/items/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Item item) {
-
+            throw new NotImplementedException();
         }
 
-        // DELETE api/<ItemsController>/5
+        // DELETE api/items/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) {
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var item = await context.Items
-                .Where(x => x.Id == id)
-                .Include(x => x.ParentStorage)
-                .Where(x => x.ParentStorage.OwnerId == currentUserId)
-                .Include(x => x.Image)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-            context.ItemsImages.Remove(item.Image);
-            context.Items.Remove(item);
-
-            await context.SaveChangesAsync();
+            await itemsService.DeleteEntityAsync(id);
             return Ok();
         }
     }
