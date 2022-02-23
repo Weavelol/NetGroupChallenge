@@ -14,7 +14,6 @@ namespace NetGroupChallengeBlazor.Server.Extensions {
         }
 
         public static void ConfigureServices(this IServiceCollection services) {
-            services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IStoragesService, StoragesService>();
             services.AddTransient<IItemsService, ItemsService>();
         }
