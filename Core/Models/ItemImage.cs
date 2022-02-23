@@ -9,5 +9,9 @@ namespace Core.Models {
         public byte[] ImageData { get; set; }
 
         public virtual Item? Item { get; set; }
+
+        public ItemImage() {
+            Id = Guid.Empty;
+        }
     }
 }

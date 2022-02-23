@@ -89,17 +89,17 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d2045bb3-f96a-4e07-b642-e593c2e3cf13",
+                            Id = "a6f146e4-c0d3-4c11-9926-22c94b12a2a1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "47003665-1fe8-4f70-b395-4f7edcc94106",
+                            ConcurrencyStamp = "059f0cd8-167d-4c5c-b9de-572b4dcc8b85",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELngzQHoBsFdsyK+ivd2qlKNx2ZBgHi/pEMvdb7wYsouaYZaY7MYZ/nMFy1JbGGIdQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKJONh7LQtplBFr5fkLc2Kxz4P+5ykLr401jc7L+iJdOFdUfEHCLGLr2lN5xaTgH+Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9752a28d-e39a-4a82-87bb-37ffed69c6b9",
+                            SecurityStamp = "1baa47ba-100b-44a3-8141-c4382bf9695d",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -144,6 +144,8 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("StorageId");
 
                     b.ToTable("Items");
@@ -152,6 +154,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Core.Models.ItemImage", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("ImageData")
@@ -365,15 +368,15 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4f222d91-6b60-437b-9bfc-f0e09e187af3",
-                            ConcurrencyStamp = "47d0aad5-63df-476e-8180-587ec90ce83a",
+                            Id = "3b900495-7ddf-4757-b2e9-86b3e7f5f8c5",
+                            ConcurrencyStamp = "4dc96a0e-3ce1-428e-8849-08f0729ed51a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "026921dc-d870-4df3-bca3-58f82fc64654",
-                            ConcurrencyStamp = "6bc5d1c5-8fd0-46b5-ac36-f65fb583b4d9",
+                            Id = "eb22060c-f41f-4c53-937c-7d35240b169c",
+                            ConcurrencyStamp = "4329b4c7-8142-4a2e-80a6-6e5ed21d464c",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -470,8 +473,8 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "d2045bb3-f96a-4e07-b642-e593c2e3cf13",
-                            RoleId = "4f222d91-6b60-437b-9bfc-f0e09e187af3"
+                            UserId = "a6f146e4-c0d3-4c11-9926-22c94b12a2a1",
+                            RoleId = "3b900495-7ddf-4757-b2e9-86b3e7f5f8c5"
                         });
                 });
 
@@ -498,31 +501,29 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Core.Models.Item", b =>
                 {
+                    b.HasOne("Core.Models.ItemImage", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Core.Models.Storage", "ParentStorage")
                         .WithMany()
                         .HasForeignKey("StorageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Image");
+
                     b.Navigation("ParentStorage");
-                });
-
-            modelBuilder.Entity("Core.Models.ItemImage", b =>
-                {
-                    b.HasOne("Core.Models.Item", "Item")
-                        .WithOne("Image")
-                        .HasForeignKey("Core.Models.ItemImage", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Core.Models.Storage", b =>
                 {
                     b.HasOne("Core.Models.Storage", "ParentStorage")
                         .WithMany("NestedStorages")
-                        .HasForeignKey("ParentStorageId");
+                        .HasForeignKey("ParentStorageId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ParentStorage");
                 });
@@ -575,12 +576,6 @@ namespace Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Core.Models.Item", b =>
-                {
-                    b.Navigation("Image")
                         .IsRequired();
                 });
 

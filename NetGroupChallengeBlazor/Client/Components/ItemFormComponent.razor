@@ -115,10 +115,12 @@
     }
 
     private async Task LoadFiles(InputFileChangeEventArgs e) {
-        var image = new ItemImage {
-            Id = Guid.Empty,
-            Title = e.File.Name,
-        };
+        var image = new ItemImage();
+        image.Title = e.File.Name;
+        if(Item.Image.Id != Guid.Empty) {
+            image.Id = Item.Image.Id;
+        }
+
         MemoryStream ms = new MemoryStream();
         using var stream = e.File.OpenReadStream();
         await stream.CopyToAsync(ms);
