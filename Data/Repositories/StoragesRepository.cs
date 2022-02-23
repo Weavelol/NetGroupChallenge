@@ -8,16 +8,13 @@ using Core.Exceptions;
 
 namespace Data.Repositories {
     public class StoragesRepository : AbstractRepository<Storage>, IStoragesRepository {
-        private readonly string userId;
 
         public StoragesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
-            : base(context, httpContextAccessor) {
-            userId = HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        }
+            : base(context, httpContextAccessor) { }
 
         public override async Task<IEnumerable<Storage>> GetByConditionAsync(Expression<Func<Storage, bool>> expression) {
             return await Context.Set<Storage>()
-                .Where(x => x.OwnerId == userId)
+                .Where(x => x.OwnerId == UserId)
                 .Where(expression)
                 .AsNoTracking()
                 .Include(x => x.ParentStorage)
@@ -25,32 +22,25 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        
 
-        public override async Task<Storage> CreateAsync(Storage storage) {
-            if (storage is null) {
-                throw new NullReferenceException("Source Item wasn't provided.");
-            }
-            storage.OwnerId = userId;
-
+        protected override void UniqueCreatePart(Storage item) {
+            item.OwnerId = UserId;
+            SetStoragePath(item);
+        }
+        private void SetStoragePath(Storage storage) {
             if (storage.ParentStorageId == Guid.Empty) {
                 storage.ParentStorageId = null;
                 storage.StoragePath = $"{storage.Title}/";
             } else {
-                var parentStorage = await GetByIdAsync((Guid)storage.ParentStorageId);
-                storage.StoragePath = $"{parentStorage.StoragePath}{storage.Title}/";
+                storage.StoragePath = $"{storage.ParentStorage.StoragePath}{storage.Title}/";
             }
-
-            var newItem = await Context.AddAsync(storage);
-            await SaveChangesAsync();
-            return await GetByIdAsync(newItem.Entity.Id);
+            //setting parent storage to null to avoid cascade creation.
+            storage.ParentStorage = null;
         }
-
         
 
         public override async Task<Storage> GetByIdAsync(Guid id) {
-            
-            if(userId is null) {
+            if(UserId is null) {
                 throw new NotAuthorizedException("there is no authorized user in system.");
             }
 
@@ -60,7 +50,7 @@ namespace Data.Repositories {
                     Id = Guid.Empty,
                     Title = "DummyStorage",
                     NestedStorages = nested.ToList(),
-                    OwnerId = userId,
+                    OwnerId = UserId,
                     StoragePath = string.Empty
                 };
                 return dummyStorage;
@@ -71,7 +61,6 @@ namespace Data.Repositories {
             }
             return items.FirstOrDefault();
         }
-
 
         private Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentStorageId) {
             if (parentStorageId == Guid.Empty) {

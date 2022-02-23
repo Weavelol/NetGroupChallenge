@@ -4,23 +4,33 @@ using Core.Exceptions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Data.Repositories {
     public abstract class AbstractRepository<T> : IRepository<T> where T : AbstractModel {
 
         protected readonly ApplicationDbContext Context;
-        protected readonly IHttpContextAccessor HttpContextAccessor;
+        protected readonly string? UserId;
 
         protected AbstractRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) {
             Context = context;
-            HttpContextAccessor = httpContextAccessor;
+            UserId = httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync() {
             return await GetByConditionAsync(x => true);
         }
         public abstract Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> expression);
-        public abstract Task<T> CreateAsync(T item);
+        public async Task<T> CreateAsync(T item) {
+            if (item is null) {
+                throw new NullReferenceException("Source Item wasn't provided.");
+            }
+            UniqueCreatePart(item);
+            var created = await Context.AddAsync(item);
+            await SaveChangesAsync();
+            return await GetByIdAsync(created.Entity.Id);
+        }
+        protected abstract void UniqueCreatePart(T item);
 
         public virtual async Task<T> GetByIdAsync(Guid id) {
             var items = await GetByConditionAsync(x => x.Id == id);

@@ -3,7 +3,7 @@
         public Guid StorageId { get; set; }
         public Storage ParentStorage { get; set; }
         public Guid ImageId { get; set; }
-        public ItemImage? Image { get; set; }
+        public virtual ItemImage Image { get; set; }
         public string? SerialNumber { get; set; }
         public string? Classification { get; set; }
         public string? ItemOwner { get; set; }

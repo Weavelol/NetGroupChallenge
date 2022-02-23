@@ -99,7 +99,10 @@
                 OwnerId = Guid.Empty.ToString(),
                 StoragePath = string.Empty,
                 NestedStorages = new List<Storage>()
-    };
+        };
+        if(CurrentStorage.Id != Guid.Empty) {
+            newStorage.ParentStorage = CurrentStorage;
+        }
         StateHasChanged();
     }
     private async Task OnCreateDialogClose(bool accepted) {
