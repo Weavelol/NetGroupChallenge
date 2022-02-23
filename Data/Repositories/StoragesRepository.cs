@@ -13,14 +13,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Data.Repositories {
     public class StoragesRepository : AbstractRepository<Storage>, IStoragesRepository {
-        private readonly IHttpContextAccessor httpContextAccessor;
+        public StoragesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
+            : base(context, httpContextAccessor) { }
 
-        public StoragesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) : base(context) {
-            this.httpContextAccessor = httpContextAccessor;
-        }
-
-        public override async Task<IEnumerable<Storage>> GetByConditionAsync(Expression<Func<Storage, bool>>? expression) {
-            var userId = httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        public override async Task<IEnumerable<Storage>> GetByConditionAsync(Expression<Func<Storage, bool>>? expression = null) {
+            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await Context.Set<Storage>()
                 .Where(x => x.OwnerId == userId)
                 .Where(expression)
@@ -29,15 +26,31 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public override async Task<IEnumerable<Storage>> GetAllAsync() {
-            return await GetByConditionAsync(null);
-        }
-
         public Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentStorageId) {
             if (parentStorageId == Guid.Empty) {
                 return GetByConditionAsync(x => x.ParentStorageId == null);
             }
             return GetByConditionAsync(x => x.ParentStorageId == parentStorageId);
+        }
+
+        public override async Task<Storage> CreateAsync(Storage storage) {
+            if (storage is null) {
+                throw new NullReferenceException("Source Item wasn't provided.");
+            }
+            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            storage.OwnerId = userId;
+
+            if (storage.ParentStorageId == Guid.Empty) {
+                storage.ParentStorageId = null;
+                storage.StoragePath = $"{storage.Title}/";
+            } else {
+                var parentStorage = await GetByIdAsync((Guid)storage.ParentStorageId);
+                storage.StoragePath = $"{parentStorage.StoragePath}{storage.Title}/";
+            }
+
+            var newItem = await Context.AddAsync(storage);
+            await SaveChangesAsync();
+            return await GetByIdAsync(newItem.Entity.Id);
         }
     }
 }

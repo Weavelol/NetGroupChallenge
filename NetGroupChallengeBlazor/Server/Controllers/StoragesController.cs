@@ -12,11 +12,9 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class StoragesController : ControllerBase {
-        private ApplicationDbContext context;
         private readonly IStoragesService storagesService;
 
-        public StoragesController(ApplicationDbContext context, IStoragesService storagesService) { 
-            this.context = context;
+        public StoragesController(IStoragesService storagesService) {
             this.storagesService = storagesService;
         }
 
@@ -27,6 +25,7 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
             return Ok(storages);
         }
 
+        // GET api/storages/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid? id) {
             var storages = await storagesService.GetNestedStoragesAsync(id);
@@ -36,29 +35,14 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         // POST api/storages
         [HttpPost]
         public async Task<ActionResult<Storage>> PostAsync([FromBody] Storage storage) {
-            storage.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (storage.ParentStorageId == Guid.Empty) {
-                storage.ParentStorageId = null;
-                storage.StoragePath = $"{storage.Title}/";
-            } else {
-                storage.ParentStorage = await context.Storages.Where(x => x.Id == storage.ParentStorageId).FirstOrDefaultAsync();
-                storage.StoragePath = $"{storage.ParentStorage.StoragePath}{storage.Title}/";
-            }
-            
-            await context.AddAsync(storage);
-            await context.SaveChangesAsync();
-
-            return Created(nameof(GetAllAsync), storage);
+            var createdStorage = await storagesService.CreateEntityAsync(storage);
+            return Created(nameof(GetAllAsync), createdStorage);
         }
 
         // DELETE api/storages/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id) {
-            var storageToDelete = context.Storages.Where(s => s.Id == id).FirstOrDefault();
-            if (storageToDelete != null) {
-                context.Storages.Remove(storageToDelete);
-            }
-            await context.SaveChangesAsync();
+            await storagesService.DeleteEntityAsync(id);
             return Ok();
         }
     }

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data.Interfaces;
+﻿using Data.Interfaces;
 using Core.Models;
 using System.Linq.Expressions;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace Data.Repositories {
     public class ImagesRepository : AbstractRepository<ItemImage>, IImagesRepository {
-        public ImagesRepository(ApplicationDbContext context) : base(context) { }
+        public ImagesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
+            : base(context, httpContextAccessor) { }
 
-        public override Task<IEnumerable<ItemImage>> GetAllAsync() {
+        public override Task<ItemImage> CreateAsync(ItemImage item) {
             throw new NotImplementedException();
         }
 
