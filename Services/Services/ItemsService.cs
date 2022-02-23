@@ -18,12 +18,8 @@ namespace Services.Services {
             await itemsRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<Item>> GetAllAsync() {
+        public override async Task<IEnumerable<Item>> GetAllAsync() {
             return await itemsRepository.GetAllAsync();
-        }
-
-        public async Task<IEnumerable<Item>> GetItemsOfStorage(Guid? storageId) {
-            return await itemsRepository.GetItemsOfStorage(storageId);
         }
 
         public async Task UpdateAsync(Item item) {

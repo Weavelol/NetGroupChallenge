@@ -13,12 +13,8 @@ namespace Services.Services {
             await Repository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<Storage>> GetAllAsync() {
+        public override async Task<IEnumerable<Storage>> GetAllAsync() {
             return await storagesRepository.GetAllAsync();
-        }
-
-        public async Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentId) {
-            return await storagesRepository.GetNestedStoragesAsync(parentId);
         }
 
         public async Task<Storage> GetStorageByIdAsync(Guid id) {
