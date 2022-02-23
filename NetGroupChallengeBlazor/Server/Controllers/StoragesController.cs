@@ -23,9 +23,10 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET api/storages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid? id) {
-            var storages = await storagesService.GetNestedStoragesAsync(id);
-            return Ok(storages);
+        public async Task<ActionResult<Storage>> GetStoragesOfParentStorageAsync(Guid id) {
+            //var storages = await storagesService.GetNestedStoragesAsync(id);
+            var storage = await storagesService.GetStorageByIdAsync(id);
+            return Ok(storage);
         }
 
         // POST api/storages

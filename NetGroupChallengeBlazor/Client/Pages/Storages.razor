@@ -97,7 +97,8 @@
                 ParentStorageId = CurrentStorage.Id,
                 Id = Guid.Empty,
                 OwnerId = Guid.Empty.ToString(),
-                StoragePath = string.Empty
+                StoragePath = string.Empty,
+                NestedStorages = new List<Storage>()
     };
         StateHasChanged();
     }
@@ -124,7 +125,7 @@
             };
             await UpdateCurrentStorage(storage);
         } else {
-            var storage = await Http.GetFromJsonAsync<Storage>($"api/storage/{CurrentStorage.ParentStorageId}");
+            var storage = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.ParentStorageId}");
             await UpdateCurrentStorage(storage);
         }
     }
@@ -140,9 +141,10 @@
 
     private async Task UpdateStorages() {
         try {
-             var storages = await Http.GetFromJsonAsync<List<Storage>>($"api/storages/{CurrentStorage.Id}");
+            var storages = await Http.GetFromJsonAsync<Storage>($"api/storages/{CurrentStorage.Id}");
+             
              if(storages is not null) {
-                 nestedStorages = storages;
+                 nestedStorages = storages.NestedStorages;
              }
         } catch (AccessTokenNotAvailableException exception) {
             exception.Redirect();

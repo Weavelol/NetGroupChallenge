@@ -17,6 +17,7 @@ namespace Data.Repositories {
                 .Where(expression)
                 .AsNoTracking()
                 .Include(x => x.ParentStorage)
+                .Include(x => x.NestedStorages)
                 .ToListAsync();
         }
 
@@ -53,7 +54,24 @@ namespace Data.Repositories {
                 .Where(x => x.OwnerId == userId)
                 .AsNoTracking()
                 .Include(x => x.ParentStorage)
+                .Include(x => x.NestedStorages)
                 .ToListAsync();
+        }
+
+        public async Task<Storage> GetStorageByIdAsync(Guid id) {
+            var userId = HttpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (id == Guid.Empty) {
+                var nested = await GetNestedStoragesAsync(Guid.Empty);
+                var dummyStorage = new Storage {
+                    Id = Guid.Empty,
+                    Title = "DummyStorage",
+                    NestedStorages = nested.ToList(),
+                    OwnerId = userId,
+                    StoragePath = string.Empty
+                };
+                return dummyStorage;
+            }
+            return await GetByIdAsync(id);
         }
     }
 }

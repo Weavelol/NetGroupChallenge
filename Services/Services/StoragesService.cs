@@ -20,5 +20,9 @@ namespace Services.Services {
         public async Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentId) {
             return await storagesRepository.GetNestedStoragesAsync(parentId);
         }
+
+        public async Task<Storage> GetStorageByIdAsync(Guid id) {
+            return await storagesRepository.GetStorageByIdAsync(id);
+        }
     }
 }

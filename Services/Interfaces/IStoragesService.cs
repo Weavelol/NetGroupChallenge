@@ -9,5 +9,6 @@ namespace Services.Interfaces {
     public interface IStoragesService : IService<Storage> {
         public Task<IEnumerable<Storage>> GetAllAsync();
         public Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentId);
+        public Task<Storage> GetStorageByIdAsync(Guid id);
     }
 }
