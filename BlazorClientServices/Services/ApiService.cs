@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 using BlazorClientServices.Interfaces;
-using Core.Models;
+using DTOModels;
 
 namespace BlazorClientServices.Services {
     public class ApiService : IApiService {
@@ -10,23 +10,23 @@ namespace BlazorClientServices.Services {
             this.http = http;
         }
 
-        public async Task<Storage> GetStorageAsync(string url) {
-            return await http.GetFromJsonAsync<Storage>(url);
+        public async Task<StorageDTO> GetStorageAsync(string url) {
+            return await http.GetFromJsonAsync<StorageDTO>(url);
         }
-        public async Task<List<Storage>> GetStoragesAsync(string url) {
-            return await http.GetFromJsonAsync<List<Storage>>(url);
+        public async Task<List<StorageDTO>> GetStoragesAsync(string url) {
+            return await http.GetFromJsonAsync<List<StorageDTO>>(url);
         }
-        public async Task PostStorageAsync(string url, Storage storage) {
+        public async Task PostStorageAsync(string url, StorageCreateDTO storage) {
             await http.PostAsJsonAsync(url, storage);
         }
 
-        public async Task<List<Item>> GetItemsAsync(string url) {
-            return await http.GetFromJsonAsync<List<Item>>(url);
+        public async Task<List<ItemDTO>> GetItemsAsync(string url) {
+            return await http.GetFromJsonAsync<List<ItemDTO>>(url);
         }
-        public async Task PostItemAsync(string url, Item item) {
+        public async Task PostItemAsync(string url, ItemCreateDTO item) {
             await http.PostAsJsonAsync(url, item);
         }
-        public async Task PutItemAsync(string url, Item item) {
+        public async Task PutItemAsync(string url, ItemCreateDTO item) {
             await http.PutAsJsonAsync(url, item);
         }
 

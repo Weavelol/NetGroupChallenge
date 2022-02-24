@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Core.Models;
 using Services.Interfaces;
+using DTOModels;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {
     [Authorize]
@@ -16,29 +16,29 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET: api/items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetAsync() {
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAsync() {
             var items = await itemsService.GetAllAsync();
             return Ok(items);
         }
 
         // GET api/items/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetAsync(Guid id) {
+        public async Task<ActionResult<ItemDTO>> GetAsync(Guid id) {
             var item = await itemsService.GetByIdAsync(id);
             return Ok(item);
         }
 
         // POST api/items
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Item item) {
+        public async Task<IActionResult> Post([FromBody] ItemCreateDTO item) {
             var created = await itemsService.CreateAsync(item);
             return Created(nameof(GetAsync), created);
         }
 
         // PUT api/items
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Item item) {
-            await itemsService.UpdateAsync(item);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, [FromBody] ItemCreateDTO item) {
+            await itemsService.UpdateAsync(id, item);
             return NoContent();
         }
 

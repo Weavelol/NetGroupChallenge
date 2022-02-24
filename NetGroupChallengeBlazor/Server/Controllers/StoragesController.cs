@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Core.Models;
+using DTOModels;
 using Services.Interfaces;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {
@@ -16,21 +16,21 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET api/storages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Storage>>> GetAllAsync() {
+        public async Task<ActionResult<IEnumerable<StorageDTO>>> GetAllAsync() {
             var storages = await storagesService.GetAllAsync();
             return Ok(storages);
         }
 
         // GET api/storages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Storage>> GetAsync(Guid id) {
+        public async Task<ActionResult<StorageDTO>> GetAsync(Guid id) {
             var storage = await storagesService.GetByIdAsync(id);
             return Ok(storage);
         }
 
         // POST api/storages
         [HttpPost]
-        public async Task<ActionResult<Storage>> PostAsync([FromBody] Storage storage) {
+        public async Task<ActionResult<StorageDTO>> PostAsync([FromBody] StorageCreateDTO storage) {
             var createdStorage = await storagesService.CreateAsync(storage);
             return Created(nameof(GetAllAsync), createdStorage);
         }

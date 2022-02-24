@@ -1,5 +1,5 @@
 ﻿@page "/storages"
-@using Core.Models
+@using DTOModels
 @using NetGroupChallengeBlazor.Client.Components
 @using Microsoft.AspNetCore.Authorization 
 @using BlazorClientServices.Interfaces
@@ -49,13 +49,13 @@
 
 @code {
     [Parameter]
-    public Storage CurrentStorage { get; set; } = new Storage();
+    public StorageDTO CurrentStorage { get; set; } = new StorageDTO();
 
 
-    private List<Storage> nestedStorages = new List<Storage>();
-    private List<Item> nestedItems = new List<Item>();
-    private Storage newStorage;
-    private Storage deleteStorage;
+    private List<StorageDTO> nestedStorages = new List<StorageDTO>();
+    private List<ItemDTO> nestedItems = new List<ItemDTO>();
+    private StorageCreateDTO newStorage;
+    private StorageDTO deleteStorage;
 
     protected override async Task OnInitializedAsync() {
         await UpdateStorages();
@@ -63,7 +63,7 @@
 
 
     private bool DeleteDialogOpen { get; set; }
-    private void OpenDeleteDialog(Storage storage) {
+    private void OpenDeleteDialog(StorageDTO storage) {
         DeleteDialogOpen = true;
         deleteStorage = storage;
         StateHasChanged();
@@ -81,9 +81,8 @@
     private bool CreateDialogOpen { get; set; }
     private void OpenCreateDialog() {
         CreateDialogOpen = true;
-        newStorage = new Storage();
+        newStorage = new StorageCreateDTO();
         if(CurrentStorage.Id != Guid.Empty) {
-            newStorage.ParentStorage = CurrentStorage;
             newStorage.ParentStorageId = CurrentStorage.Id;
         }
         StateHasChanged();
@@ -91,24 +90,25 @@
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
+            newStorage.StoragePath = $"{CurrentStorage.StoragePath}/{newStorage.Title}";
             await apiService.PostStorageAsync("api/storages", newStorage);
             await UpdateStorages();
             StateHasChanged();
         }
     }
 
-    private async Task SelectNextStorage(Storage storage) {
+    private async Task SelectNextStorage(StorageDTO storage) {
         await UpdateCurrentStorage(storage);
     }
     private async Task SelectPreviousStorage() {
-        var storage = new Storage();
+        var storage = new StorageDTO();
         if(CurrentStorage.ParentStorageId is not null) {
             storage = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.ParentStorageId}");
         } 
         await UpdateCurrentStorage(storage);
     }
 
-    private async Task UpdateCurrentStorage(Storage storage) {
+    private async Task UpdateCurrentStorage(StorageDTO storage) {
         CurrentStorage = storage;
         await UpdateStorages();
     }

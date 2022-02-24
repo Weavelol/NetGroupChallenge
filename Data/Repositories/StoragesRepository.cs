@@ -25,7 +25,7 @@ namespace Data.Repositories {
 
         protected override void UniqueCreatePart(Storage item) {
             item.OwnerId = UserId;
-            SetStoragePath(item);
+            //SetStoragePath(item);
         }
         private void SetStoragePath(Storage storage) {
             if (storage.ParentStorageId == Guid.Empty) {

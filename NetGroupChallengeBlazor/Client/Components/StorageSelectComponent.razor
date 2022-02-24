@@ -1,4 +1,4 @@
-﻿@using Core.Models
+﻿@using DTOModels
 @using BlazorClientServices.Interfaces
 @inject IApiService apiService
 
@@ -15,15 +15,14 @@
 
 @code {
     [Parameter]
-    public Item Item { get; set; }
+    public ItemCreateDTO Item { get; set; }
 
-    private Dictionary<Guid, Storage> storagesDict = new Dictionary<Guid, Storage>();
-    private List<Storage> storages = new List<Storage>();
+    private Dictionary<Guid, StorageDTO> storagesDict = new Dictionary<Guid, StorageDTO>();
+    private List<StorageDTO> storages = new List<StorageDTO>();
     private Guid StorageId {
         get { return Item.StorageId; }
         set {
             if (storagesDict.TryGetValue(value, out var storage)) {
-                Item.ParentStorage = storage;
                 Item.StorageId = value;
             }
         }
@@ -40,9 +39,8 @@
 
     private void SetDefaultStorage() {
         if(Item.StorageId == Guid.Empty) {
-            Item.ParentStorage = storages.FirstOrDefault();
             Item.StorageId = storages.FirstOrDefault().Id;
         }
-        StorageId = Item.ParentStorage.Id;
+        StorageId = Item.StorageId;
     }
 }

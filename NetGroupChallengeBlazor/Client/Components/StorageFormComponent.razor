@@ -1,5 +1,4 @@
-﻿@using Core.Models
-
+﻿@using DTOModels
 <EditForm Model="@Storage">
     <div class="form-group row">
         <label for="Name" class="col-sm-4 col-form-label">Title</label>
@@ -12,6 +11,6 @@
 
 @code {
     [Parameter]
-    public Storage Storage { get; set; }
+    public StorageCreateDTO Storage { get; set; }
 
 }

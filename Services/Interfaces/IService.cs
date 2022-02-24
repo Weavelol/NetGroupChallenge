@@ -1,8 +1,8 @@
 ﻿namespace Services.Interfaces {
-    public interface IService<T> {
-        public Task<T> GetByIdAsync(Guid Id);
-        public Task<T> CreateAsync(T entity);
+    public interface IService<TDTO, TCreateDTO> {
+        public Task<TDTO> GetByIdAsync(Guid Id);
+        public Task<TDTO> CreateAsync(TCreateDTO entity);
         public Task DeleteAsync(Guid Id);
-        public Task<IEnumerable<T>> GetAllAsync();
+        public Task<IEnumerable<TDTO>> GetAllAsync();
     }
 }

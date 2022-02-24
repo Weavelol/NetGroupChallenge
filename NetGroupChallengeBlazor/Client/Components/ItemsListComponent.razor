@@ -1,16 +1,16 @@
-﻿@using Core.Models
+﻿@using DTOModels
 @using BlazorClientServices.Interfaces
 @inject IApiService apiService
 
 @if (CreateDialogOpen) {
     <DialogComponent Title="Create" OnClose="@OnCreateDialogClose">
-        <ItemFormComponent Item="@currentItem" />
+        <ItemFormComponent Item="@newItem" />
     </DialogComponent>
 }
 
 @if (UpdateDialogOpen) {
     <DialogComponent Title="Update" OnClose="@OnUpdateDialogClose">
-        <ItemFormComponent Item=@currentItem/>
+        <ItemFormComponent Item=@newItem/>
     </DialogComponent>
 }
 
@@ -68,14 +68,16 @@
 
 @code {
     [Parameter]
-    public List<Item> Items { get; set; } = new List<Item>();
+    public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
     [Parameter]
     public EventCallback OnUpdateCallback { get; set; }
 
-    private Item currentItem = new Item();
+    private ItemDTO currentItem = new ItemDTO();
+    private ItemCreateDTO newItem = new ItemCreateDTO();
+    private Guid updatingId;
 
     private bool DeleteDialogOpen { get; set; }
-    private void OpenDeleteDialog(Item item) {
+    private void OpenDeleteDialog(ItemDTO item) {
         DeleteDialogOpen = true;
         currentItem = item;
         StateHasChanged();
@@ -92,35 +94,49 @@
     private bool CreateDialogOpen { get; set; }
     private void OpenCreateDialog() {
         CreateDialogOpen = true;
-        currentItem = new Item();
+        newItem = new ItemCreateDTO();
         StateHasChanged();
     }
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
-            await apiService.PostItemAsync("api/items", currentItem);
+            await apiService.PostItemAsync("api/items", newItem);
             await OnUpdateCallback.InvokeAsync();
+            newItem = new ItemCreateDTO();
             StateHasChanged();
         }
     }
 
     private bool UpdateDialogOpen { get; set; }
-    private void OpenUpdateDialog(Item item) {
-        currentItem = item;
+    private void OpenUpdateDialog(ItemDTO item) {
+        updatingId = item.Id;
+        newItem = new ItemCreateDTO {
+                Title = item.Title,
+                StorageId = item.StorageId,
+                ImageId = item.ImageId,
+                Image = item.Image,
+                SerialNumber = item.SerialNumber,
+                Classification = item.Classification,
+                ItemOwner = item.ItemOwner,
+                Weight = item.Weight,
+                Length = item.Length,
+                Width = item.Width,
+                Height = item.Height
+            };
         UpdateDialogOpen = true;
         StateHasChanged();
     }
     private async Task OnUpdateDialogClose(bool accepted) {
         UpdateDialogOpen = false;
         if (accepted) {
-            await apiService.PutItemAsync($"api/items", currentItem);
+            await apiService.PutItemAsync($"api/items/{updatingId}", newItem);
             await OnUpdateCallback.InvokeAsync();
+            newItem = new ItemCreateDTO();
             StateHasChanged();
         }
     }
 
-
-    private string CreateImage(ItemImage image) {
+    private string CreateImage(ImageDTO image) {
         string imageBase64Data = Convert.ToBase64String(image.ImageData);
         string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
         return imageDataURL;

@@ -1,7 +1,7 @@
 ﻿@page "/items"
 
 @using Microsoft.AspNetCore.Authorization
-@using Core.Models
+@using DTOModels
 @using NetGroupChallengeBlazor.Client.Components
 @using BlazorClientServices.Interfaces
 
@@ -17,7 +17,7 @@
 </ItemsListComponent>
 
 @code {
-    private List<Item> ItemsList = new List<Item>();
+    private List<ItemDTO> ItemsList = new List<ItemDTO>();
 
     protected override async Task OnInitializedAsync() {
         await UpdateItemsAsync();

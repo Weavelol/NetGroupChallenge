@@ -1,4 +1,4 @@
-﻿@using Core.Models
+﻿@using DTOModels
 @using BlazorClientServices.Interfaces
 @inject IApiService apiService
 
@@ -74,10 +74,10 @@
 
 @code {
     [Parameter]
-    public Item Item{ get; set; }
+    public ItemCreateDTO Item{ get; set; }
 
     private async Task LoadFiles(InputFileChangeEventArgs e) {
-        var image = new ItemImage();
+        var image = new ImageDTO();
         image.Title = e.File.Name;
         if(Item.Image != null && Item.Image.Id != Guid.Empty) {
             image.Id = Item.Image.Id;
