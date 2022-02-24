@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetGroupChallengeBlazor.Server.Extensions;
 using System.Text.Json.Serialization;
+using AutoMapper;
 using Data;
 using Core.Models;
 
@@ -33,6 +34,7 @@ builder.Services.AddControllersWithViews()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddRazorPages();
 
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureServices();
