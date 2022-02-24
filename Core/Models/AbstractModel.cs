@@ -1,6 +1,6 @@
 ﻿namespace Core.Models {
-    public abstract class AbstractModel {
-        public virtual Guid Id { get; set; }
-        public virtual string Title { get; set; }
+    public class AbstractModel {
+        public Guid Id { get; set; } = Guid.Empty;
+        public string Title { get; set; } = string.Empty;
     }
 }
