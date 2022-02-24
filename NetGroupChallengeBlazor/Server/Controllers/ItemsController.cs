@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Services.Interfaces;
 using DTOModels;
+using Data.FilterParameters;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {
     [Authorize]
@@ -16,7 +17,8 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET: api/items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAsync() {
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAsync([FromQuery] ItemFilters filters) {
+            var items2 = await itemsService.GetFilteredAsync(filters);
             var items = await itemsService.GetAllAsync();
             return Ok(items);
         }

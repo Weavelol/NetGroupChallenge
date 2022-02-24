@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Core.Exceptions;
+using Data.FilterParameters;
 
 namespace Data.Repositories {
     public class ItemsRepository : AbstractRepository<Item>, IItemsRepository {
@@ -19,6 +20,10 @@ namespace Data.Repositories {
                 .Include(x => x.Image)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public Task<IEnumerable<Item>> GetFilteredAsync(ItemFilters filters) {
+            throw new NotImplementedException();
         }
 
         protected override void UniqueCreatePart(Item item) {

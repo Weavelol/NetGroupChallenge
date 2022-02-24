@@ -3,6 +3,7 @@ using Core.Models;
 using Data.Interfaces;
 using DTOModels;
 using AutoMapper;
+using Data.FilterParameters;
 
 namespace Services.Services {
     public class ItemsService : AbstractService<Item, ItemDTO, ItemCreateDTO>, IItemsService {
@@ -13,6 +14,11 @@ namespace Services.Services {
 
         public override async Task<IEnumerable<ItemDTO>> GetAllAsync() {
             var entities = await itemsRepository.GetAllAsync();
+            return Mapper.Map<IEnumerable<ItemDTO>>(entities);
+        }
+
+        public async Task<IEnumerable<ItemDTO>> GetFilteredAsync(ItemFilters filters) {
+            var entities = await itemsRepository.GetFilteredAsync(filters);
             return Mapper.Map<IEnumerable<ItemDTO>>(entities);
         }
 
