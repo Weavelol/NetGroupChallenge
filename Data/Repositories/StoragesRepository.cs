@@ -18,6 +18,7 @@ namespace Data.Repositories {
                 .AsNoTracking()
                 .Include(x => x.ParentStorage)
                 .Include(x => x.NestedStorages)
+                .Include(x => x.NestedItems)
                 .ToListAsync();
         }
 
@@ -59,6 +60,19 @@ namespace Data.Repositories {
                 throw new EntityNotFoundException($"There is no entity with id: {id}");
             }
             return items.FirstOrDefault();
+        }
+
+        public override async Task DeleteAsync(Guid id) {
+            var item = await GetByIdAsync(id);
+            if (item.NestedStorages.Any()) {
+                throw new CascadeDeleteException("Storage cannot be deleted since it contains other storages.");
+            }
+            if (item.NestedItems.Any()) {
+                throw new CascadeDeleteException("Storage cannot be deleted since it contatins items.");
+            }
+
+            Context.Set<Storage>().Remove(item);
+            await SaveChangesAsync();
         }
 
         private Task<IEnumerable<Storage>> GetNestedStoragesAsync(Guid? parentStorageId) {
