@@ -8,6 +8,10 @@
 @attribute [Authorize(Roles = "User, Admin")]
 @inject IApiService apiService
 
+<ItemsSearchComponent>
+
+</ItemsSearchComponent>
+
 <ItemsListComponent Items="@ItemsList" OnUpdateCallback="@UpdateItemsAsync">
 
 </ItemsListComponent>

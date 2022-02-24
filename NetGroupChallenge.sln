@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetGroupChallengeBlazor.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetGroupChallengeBlazor.Client", "NetGroupChallengeBlazor\Client\NetGroupChallengeBlazor.Client.csproj", "{28666DF6-E0F8-4E96-B421-8D0929A86A79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorClientServices", "BlazorClientServices\BlazorClientServices.csproj", "{60FD9E72-E9F3-4398-9D98-256801CC415C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorClientServices", "BlazorClientServices\BlazorClientServices.csproj", "{60FD9E72-E9F3-4398-9D98-256801CC415C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

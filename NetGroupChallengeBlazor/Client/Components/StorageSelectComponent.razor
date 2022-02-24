@@ -1,0 +1,48 @@
+﻿@using Core.Models
+@using BlazorClientServices.Interfaces
+@inject IApiService apiService
+
+<div class="form-group row">
+        <label for="Storage" class="col-sm-4 col-form-label">Storage</label>
+        <div class="col-sm-8">
+            <InputSelect @bind-Value="StorageId" class="form-control" id="Storage">
+                @foreach (var storage in storages) {
+                    <option value="@storage.Id">@storage.StoragePath</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+
+@code {
+    [Parameter]
+    public Item Item { get; set; }
+
+    private Dictionary<Guid, Storage> storagesDict = new Dictionary<Guid, Storage>();
+    private List<Storage> storages = new List<Storage>();
+    private Guid StorageId {
+        get { return Item.StorageId; }
+        set {
+            if (storagesDict.TryGetValue(value, out var storage)) {
+                Item.ParentStorage = storage;
+                Item.StorageId = value;
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync() {
+        storages = await apiService.GetStoragesAsync($"api/storages");
+
+        foreach(var st in storages) {
+            storagesDict.Add(st.Id, st);
+        }
+        SetDefaultStorage();
+    }
+
+    private void SetDefaultStorage() {
+        if(Item.StorageId == Guid.Empty) {
+            Item.ParentStorage = storages.FirstOrDefault();
+            Item.StorageId = storages.FirstOrDefault().Id;
+        }
+        StorageId = Item.ParentStorage.Id;
+    }
+}

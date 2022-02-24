@@ -22,7 +22,6 @@
 
 
 <div class="container">
-    <h3 class="p-3 text-center">Items list</h3>
     <a></a>
     <table class="table table-striped table-bordered">
         <thead>
@@ -34,7 +33,9 @@
                 <th>Classification</th>
                 <th>Serial Number</th>
                 <th>Weight</th>
-                <th>Size</th>
+                <th>Length</th>
+                <th>Width</th>
+                <th>Height</th>
                 <th><button type="button" class="btn" @onclick="() => OpenCreateDialog()">Create</button></th>
 
             </tr>
@@ -52,6 +53,8 @@
                     <td>@item.Classification</td>
                     <td>@item.SerialNumber</td>
                     <td>@item.Weight</td>
+                    <td>@item.Length</td>
+                    <td>@item.Width</td>
                     <td>@item.Height</td>
                     <td>
                         <button type="button" class="btn" @onclick="() => OpenUpdateDialog(item)">Edit</button>
