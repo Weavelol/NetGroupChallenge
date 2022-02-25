@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetGroupChallengeBlazor.Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorClientServices", "BlazorClientServices\BlazorClientServices.csproj", "{60FD9E72-E9F3-4398-9D98-256801CC415C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOModels", "DTOModels\DTOModels.csproj", "{069AD9CD-DF62-4436-B533-B3C7E0F69E28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOModels", "DTOModels\DTOModels.csproj", "{069AD9CD-DF62-4436-B533-B3C7E0F69E28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

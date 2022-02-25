@@ -19,7 +19,6 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAsync([FromQuery] ItemFiltersParameters filters) {
             var items2 = await itemsService.GetFilteredAsync(filters);
-            //var items = await itemsService.GetAllAsync();
             return Ok(items2);
         }
 
