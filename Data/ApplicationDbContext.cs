@@ -20,10 +20,7 @@ namespace Data {
         protected override void OnModelCreating(ModelBuilder builder) {
             base.OnModelCreating(builder);
 
-            builder.Entity<Storage>()
-                .HasMany(x => x.NestedStorages)
-                .WithOne(x => x.ParentStorage)
-                .OnDelete(DeleteBehavior.Cascade);
+
 
             var adminRole = new IdentityRole {
                 Name = "Admin",

@@ -16,8 +16,8 @@ namespace Services.Services {
             return mapper.Map<IEnumerable<ApplicationUserDTO>>(users);
         }
 
-        public async Task UpdateLastLoginTime(string userId) {
-            await usersRepository.UpdateLastLoginTime(userId);
+        public void UpdateLastLoginTime(string userEmail) {
+            usersRepository.UpdateLastLoginTime(userEmail);
         }
     }
 }

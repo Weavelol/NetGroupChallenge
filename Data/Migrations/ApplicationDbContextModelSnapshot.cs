@@ -41,6 +41,9 @@ namespace Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -63,6 +66,9 @@ namespace Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RegistrationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -89,17 +95,18 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a6f146e4-c0d3-4c11-9926-22c94b12a2a1",
+                            Id = "edc499ad-6e05-43a5-8d94-5cd5d3286fcc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "059f0cd8-167d-4c5c-b9de-572b4dcc8b85",
+                            ConcurrencyStamp = "16f1111d-f7e7-4908-94e1-df0358ecf195",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKJONh7LQtplBFr5fkLc2Kxz4P+5ykLr401jc7L+iJdOFdUfEHCLGLr2lN5xaTgH+Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELuvP35GHRz9q+LV+x/1HgzKSb/I4Pyu2gjC0dYJeq5H40Xl94AOjRFXlqfbbsDv1Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1baa47ba-100b-44a3-8141-c4382bf9695d",
+                            RegistrationDate = new DateTime(2022, 2, 25, 23, 56, 23, 792, DateTimeKind.Local).AddTicks(571),
+                            SecurityStamp = "0b943009-e2b8-4eeb-bd52-a84c339b7642",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -368,15 +375,15 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b900495-7ddf-4757-b2e9-86b3e7f5f8c5",
-                            ConcurrencyStamp = "4dc96a0e-3ce1-428e-8849-08f0729ed51a",
+                            Id = "d90049ef-0d3d-4f76-b3f8-451e4763588c",
+                            ConcurrencyStamp = "7ab9ba0d-65b4-49c2-be74-24958cbba58b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "eb22060c-f41f-4c53-937c-7d35240b169c",
-                            ConcurrencyStamp = "4329b4c7-8142-4a2e-80a6-6e5ed21d464c",
+                            Id = "bee515c0-cbbd-45be-ac8b-df2a0641f805",
+                            ConcurrencyStamp = "9b08cbcb-f69c-4204-8e80-ad44f47f6e01",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -473,8 +480,8 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "a6f146e4-c0d3-4c11-9926-22c94b12a2a1",
-                            RoleId = "3b900495-7ddf-4757-b2e9-86b3e7f5f8c5"
+                            UserId = "edc499ad-6e05-43a5-8d94-5cd5d3286fcc",
+                            RoleId = "d90049ef-0d3d-4f76-b3f8-451e4763588c"
                         });
                 });
 
@@ -508,7 +515,7 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Core.Models.Storage", "ParentStorage")
-                        .WithMany()
+                        .WithMany("NestedItems")
                         .HasForeignKey("StorageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -522,8 +529,7 @@ namespace Data.Migrations
                 {
                     b.HasOne("Core.Models.Storage", "ParentStorage")
                         .WithMany("NestedStorages")
-                        .HasForeignKey("ParentStorageId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParentStorageId");
 
                     b.Navigation("ParentStorage");
                 });
@@ -581,6 +587,8 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Core.Models.Storage", b =>
                 {
+                    b.Navigation("NestedItems");
+
                     b.Navigation("NestedStorages");
                 });
 #pragma warning restore 612, 618

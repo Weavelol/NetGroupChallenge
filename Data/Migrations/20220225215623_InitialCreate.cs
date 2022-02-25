@@ -28,6 +28,8 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -72,18 +74,12 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    ItemImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ItemsImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ItemsImages_ItemsImages_ItemImageId",
-                        column: x => x.ItemImageId,
-                        principalTable: "ItemsImages",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -131,6 +127,7 @@ namespace Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ParentStorageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     OwnerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StoragePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -285,22 +282,22 @@ namespace Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "8b0efeb1-b5f7-4240-a4d1-0d3be7fa36e7", "12d067ac-88d5-407c-850c-7948add14746", "User", "USER" });
+                values: new object[] { "bee515c0-cbbd-45be-ac8b-df2a0641f805", "9b08cbcb-f69c-4204-8e80-ad44f47f6e01", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "94ec3e72-1422-4ae6-b2db-307348f02485", "e1a5511a-739c-4941-bf41-7c7bc75cc283", "Admin", "ADMIN" });
+                values: new object[] { "d90049ef-0d3d-4f76-b3f8-451e4763588c", "7ab9ba0d-65b4-49c2-be74-24958cbba58b", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "c5e1a67a-48fa-4746-8291-f598819371d0", 0, "cfbf5e99-913d-454f-aa8f-902146f28636", "admin@gmail.com", false, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAELBA4/pz7sgdVOmzY2lQrgrIGYpkTMS8MergUZT3LobGHZ+hyYaE0X8d+g1Z+IOTIA==", null, false, "54607c4a-d0f5-4723-b8cd-39ddf5255a63", false, "admin@gmail.com" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastLoginDate", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RegistrationDate", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "edc499ad-6e05-43a5-8d94-5cd5d3286fcc", 0, "16f1111d-f7e7-4908-94e1-df0358ecf195", "admin@gmail.com", false, null, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAELuvP35GHRz9q+LV+x/1HgzKSb/I4Pyu2gjC0dYJeq5H40Xl94AOjRFXlqfbbsDv1Q==", null, false, new DateTime(2022, 2, 25, 23, 56, 23, 792, DateTimeKind.Local).AddTicks(571), "0b943009-e2b8-4eeb-bd52-a84c339b7642", false, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "94ec3e72-1422-4ae6-b2db-307348f02485", "c5e1a67a-48fa-4746-8291-f598819371d0" });
+                values: new object[] { "d90049ef-0d3d-4f76-b3f8-451e4763588c", "edc499ad-6e05-43a5-8d94-5cd5d3286fcc" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -361,11 +358,6 @@ namespace Data.Migrations
                 name: "IX_Items_StorageId",
                 table: "Items",
                 column: "StorageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ItemsImages_ItemImageId",
-                table: "ItemsImages",
-                column: "ItemImageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Keys_Use",

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220222185347_StoragePathAddedToStorage")]
-    partial class StoragePathAddedToStorage
+    [Migration("20220225215623_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,9 @@ namespace Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -65,6 +68,9 @@ namespace Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RegistrationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -91,17 +97,18 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7298ad2b-fb7f-40cc-9d18-8ed4b6bd06f6",
+                            Id = "edc499ad-6e05-43a5-8d94-5cd5d3286fcc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fcc2c732-a985-4d0a-91a1-18d253912835",
+                            ConcurrencyStamp = "16f1111d-f7e7-4908-94e1-df0358ecf195",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAse0rJWOviUBBdvHgZ7deo8YBZOf/47K76fF6IYGKHFH85gR/N6wOXo8SQuYq/JgQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELuvP35GHRz9q+LV+x/1HgzKSb/I4Pyu2gjC0dYJeq5H40Xl94AOjRFXlqfbbsDv1Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4ef5242b-c1aa-4dd5-8cfc-b309999bc614",
+                            RegistrationDate = new DateTime(2022, 2, 25, 23, 56, 23, 792, DateTimeKind.Local).AddTicks(571),
+                            SecurityStamp = "0b943009-e2b8-4eeb-bd52-a84c339b7642",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -163,16 +170,11 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<Guid?>("ItemImageId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemImageId");
 
                     b.ToTable("ItemsImages");
                 });
@@ -375,15 +377,15 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ab0159c3-452f-4636-aa59-c029a957f441",
-                            ConcurrencyStamp = "566d9ece-e58b-41f7-afac-eae48b1ddbc0",
+                            Id = "d90049ef-0d3d-4f76-b3f8-451e4763588c",
+                            ConcurrencyStamp = "7ab9ba0d-65b4-49c2-be74-24958cbba58b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "08b9ff0b-4acd-4e3d-88c9-7fb9aa90c0ae",
-                            ConcurrencyStamp = "1768b99e-8693-4e18-a4d2-a747f52996eb",
+                            Id = "bee515c0-cbbd-45be-ac8b-df2a0641f805",
+                            ConcurrencyStamp = "9b08cbcb-f69c-4204-8e80-ad44f47f6e01",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -480,8 +482,8 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "7298ad2b-fb7f-40cc-9d18-8ed4b6bd06f6",
-                            RoleId = "ab0159c3-452f-4636-aa59-c029a957f441"
+                            UserId = "edc499ad-6e05-43a5-8d94-5cd5d3286fcc",
+                            RoleId = "d90049ef-0d3d-4f76-b3f8-451e4763588c"
                         });
                 });
 
@@ -525,17 +527,10 @@ namespace Data.Migrations
                     b.Navigation("ParentStorage");
                 });
 
-            modelBuilder.Entity("Core.Models.ItemImage", b =>
-                {
-                    b.HasOne("Core.Models.ItemImage", null)
-                        .WithMany("ForeignImages")
-                        .HasForeignKey("ItemImageId");
-                });
-
             modelBuilder.Entity("Core.Models.Storage", b =>
                 {
                     b.HasOne("Core.Models.Storage", "ParentStorage")
-                        .WithMany()
+                        .WithMany("NestedStorages")
                         .HasForeignKey("ParentStorageId");
 
                     b.Navigation("ParentStorage");
@@ -592,14 +587,11 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Models.ItemImage", b =>
-                {
-                    b.Navigation("ForeignImages");
-                });
-
             modelBuilder.Entity("Core.Models.Storage", b =>
                 {
                     b.Navigation("NestedItems");
+
+                    b.Navigation("NestedStorages");
                 });
 #pragma warning restore 612, 618
         }

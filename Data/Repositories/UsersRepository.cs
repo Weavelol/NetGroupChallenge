@@ -14,14 +14,12 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public async Task UpdateLastLoginTime(string userId) {
-            var user = await context.Set<ApplicationUser>()
-                .Where(x => x.Id == userId)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+        public void UpdateLastLoginTime(string userEmail) {
+            var user = context.Set<ApplicationUser>().Where(x => x.Email == userEmail).FirstOrDefault();
+            
             user.LastLoginDate = DateTime.Now;
             context.Set<ApplicationUser>().Update(user);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

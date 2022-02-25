@@ -11,7 +11,7 @@ namespace NetGroupChallengeBlazor.Server.Extensions {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext) {
+        public async Task InvokeAsync(HttpContext httpContext){
             try {
                 await _next(httpContext);
             } catch (Exception ex) {

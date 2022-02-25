@@ -3,6 +3,6 @@
 namespace Services.Interfaces {
     public interface IUsersService {
         public Task<IEnumerable<ApplicationUserDTO>> GetAllAsync();
-        public Task UpdateLastLoginTime(string userId);
+        public void UpdateLastLoginTime(string userEmail);
     }
 }
