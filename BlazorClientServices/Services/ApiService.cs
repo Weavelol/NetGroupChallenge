@@ -10,9 +10,13 @@ namespace BlazorClientServices.Services {
             this.http = http;
         }
 
-        public async Task<List<ApplicationUserDTO>> GetUsersAsync() {
-            return await http.GetFromJsonAsync<List<ApplicationUserDTO>>("api/items");
+        public async Task<List<ApplicationUserDTO>> GetUsersAsync(string url) {
+            return await http.GetFromJsonAsync<List<ApplicationUserDTO>>(url);
         }
+        public async Task<List<StorageDTO>> GetUsersStoragesAsync(string url) {
+            return await http.GetFromJsonAsync<List<StorageDTO>>(url);
+        }
+
 
         public async Task<StorageDTO> GetStorageAsync(string url) {
             return await http.GetFromJsonAsync<StorageDTO>(url);

@@ -8,17 +8,49 @@
 
 
 <h3>Welcome to Statistics page</h3>
+<EditForm Model=@CurrentUserId>
+    <div class="form-group row">
+        <label for="User" class="col-sm-4 col-form-label">User</label>
+        <div class="col-sm-8">
+            <InputSelect ValueExpression="@(()=>CurrentUserId)" 
+                Value="@CurrentUserId" 
+                ValueChanged="@((string value) => ChangeUser(value))" class="form-control" id="User">
+                <option value="">Select User</option>
+                @foreach (var user in users) {
+                    <option value="@user.Id">@user.Email</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+</EditForm>
+
+
 
 @code {
-    private ApplicationUserDTO CurrentUser = new ApplicationUserDTO();
-    private List<ApplicationUserDTO> users = new List<ApplicationUserDTO>();
-
-    protected override async Task OnInitializedAsync() {
-
+    private string CurrentUserId {
+        get {
+            return currentUserId;
+        }
+        set {
+            currentUserId = value;
+        }
     }
 
+    private List<ApplicationUserDTO> users = new List<ApplicationUserDTO>();
+    private List<StorageDTO> usersStorages = new List<StorageDTO>();
+    private string currentUserId = string.Empty;
 
-    private async Task<List<ApplicationUserDTO>> GetUsers() {
-        return await apiService.GetUsersAsync();
+
+    protected override async Task OnInitializedAsync() {
+        users = await apiService.GetUsersAsync("api/users");
+    }
+
+    private async Task ChangeUser(string value) {
+        CurrentUserId = value;
+        await GetUsersStorages();
+    }
+
+    private async Task GetUsersStorages() {
+        usersStorages = await apiService.GetUsersStoragesAsync($"api/statistics/{CurrentUserId}");
     }
 }

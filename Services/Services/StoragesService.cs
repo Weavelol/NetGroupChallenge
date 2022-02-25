@@ -15,5 +15,10 @@ namespace Services.Services {
             var storages = await storagesRepository.GetAllAsync();
             return Mapper.Map<IEnumerable<StorageDTO>>(storages);
         }
+
+        public async Task<IEnumerable<StorageDTO>> GetStoragesOfUserAsync(string userId) {
+            var storages = await storagesRepository.GetStoragesOfUserAsync(userId);
+            return Mapper.Map<IEnumerable<StorageDTO>>(storages);
+        }
     }
 }

@@ -25,19 +25,7 @@ namespace Data.Repositories {
 
         protected override void UniqueCreatePart(Storage item) {
             item.OwnerId = UserId;
-            //SetStoragePath(item);
         }
-        private void SetStoragePath(Storage storage) {
-            if (storage.ParentStorageId == Guid.Empty) {
-                storage.ParentStorageId = null;
-                storage.StoragePath = $"{storage.Title}/";
-            } else {
-                storage.StoragePath = $"{storage.ParentStorage.StoragePath}{storage.Title}/";
-            }
-            //setting parent storage to null to avoid cascade creation.
-            storage.ParentStorage = null;
-        }
-        
 
         public override async Task<Storage> GetByIdAsync(Guid id) {
             if(UserId is null) {
@@ -80,6 +68,10 @@ namespace Data.Repositories {
                 return GetByConditionAsync(x => x.ParentStorageId == null);
             }
             return GetByConditionAsync(x => x.ParentStorageId == parentStorageId);
+        }
+
+        public async Task<IEnumerable<Storage>> GetStoragesOfUserAsync(string UserId) {
+            return await GetByConditionAsync(x => x.OwnerId == UserId);
         }
     }
 }
