@@ -1,12 +1,24 @@
 ﻿@page "/statistics"
 @using Microsoft.AspNetCore.Authorization 
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DTOModels
+@using BlazorClientServices.Interfaces
 @attribute [Authorize(Roles = "Admin")] 
-@inject HttpClient Http
+@inject IApiService apiService
 
 
 <h3>Welcome to Statistics page</h3>
 
 @code {
+    private ApplicationUserDTO CurrentUser = new ApplicationUserDTO();
+    private List<ApplicationUserDTO> users = new List<ApplicationUserDTO>();
 
+    protected override async Task OnInitializedAsync() {
+
+    }
+
+
+    private async Task<List<ApplicationUserDTO>> GetUsers() {
+        return await apiService.GetUsersAsync();
+    }
 }

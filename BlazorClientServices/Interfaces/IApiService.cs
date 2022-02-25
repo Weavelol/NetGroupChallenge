@@ -2,6 +2,8 @@
 
 namespace BlazorClientServices.Interfaces {
     public interface IApiService {
+        public Task<List<ApplicationUserDTO>> GetUsersAsync();
+
         public Task<StorageDTO> GetStorageAsync(string url);
         public Task<List<StorageDTO>> GetStoragesAsync(string url);
         public Task PostStorageAsync(string url, StorageCreateDTO storage);
