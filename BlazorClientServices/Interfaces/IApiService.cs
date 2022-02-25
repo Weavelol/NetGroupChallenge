@@ -2,17 +2,18 @@
 
 namespace BlazorClientServices.Interfaces {
     public interface IApiService {
-        public Task<List<ApplicationUserDTO>> GetUsersAsync(string url);
-        public Task<StatisticsDTO> GetUsersStatisticsAsync(string url);
+        public Task<List<ApplicationUserDTO>> GetUsersAsync();
+        public Task<StatisticsDTO> GetUsersStatisticsAsync(string userId);
 
-        public Task<StorageDTO> GetStorageAsync(string url);
-        public Task<List<StorageDTO>> GetStoragesAsync(string url);
-        public Task PostStorageAsync(string url, StorageCreateDTO storage);
+        public Task<StorageDTO> GetStorageByIdAsync(Guid? storageId);
+        public Task<List<StorageDTO>> GetStoragesAsync();
+        public Task PostStorageAsync(StorageCreateDTO storage);
+        public Task DeleteStorageAsync(Guid? storageId);
 
-        public Task<List<ItemDTO>> GetItemsAsync(string url);
-        public Task PostItemAsync(string url, ItemCreateDTO item);
-        public Task PutItemAsync(string url, ItemCreateDTO item);
 
-        public Task DeleteAsync(string url);
+        public Task<List<ItemDTO>> GetItemsAsync(string apiQuery);
+        public Task PostItemAsync(ItemCreateDTO item);
+        public Task PutItemAsync(Guid? updatingItemId, ItemCreateDTO item);
+        public Task DeleteItemAsync(Guid? itemId);
     }
 }

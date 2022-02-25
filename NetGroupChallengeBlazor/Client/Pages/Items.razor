@@ -63,13 +63,10 @@
 
     private async Task UpdateItemsAsync() {
         apiQuery = ApplyFilters();
-        ItemsList = await apiService.GetItemsAsync($"api/{apiQuery}");
+        ItemsList = await apiService.GetItemsAsync(apiQuery);
     }
 
     private async Task UpdateFiltersAsync() {
-
-
-
         await UpdateItemsAsync();
     }
 

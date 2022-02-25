@@ -85,7 +85,7 @@
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
         if (accepted) {
-            await apiService.DeleteAsync($"api/items/{currentItem.Id}");
+            await apiService.DeleteItemAsync(currentItem.Id);
             await OnUpdateCallback.InvokeAsync();
             StateHasChanged();
         }
@@ -100,7 +100,7 @@
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
-            await apiService.PostItemAsync("api/items", newItem);
+            await apiService.PostItemAsync(newItem);
             await OnUpdateCallback.InvokeAsync();
             newItem = new ItemCreateDTO();
             StateHasChanged();
@@ -129,7 +129,7 @@
     private async Task OnUpdateDialogClose(bool accepted) {
         UpdateDialogOpen = false;
         if (accepted) {
-            await apiService.PutItemAsync($"api/items/{updatingId}", newItem);
+            await apiService.PutItemAsync(updatingId, newItem);
             await OnUpdateCallback.InvokeAsync();
             newItem = new ItemCreateDTO();
             StateHasChanged();
@@ -138,7 +138,6 @@
 
     private string CreateImage(ImageDTO image) {
         string imageBase64Data = Convert.ToBase64String(image.ImageData);
-        string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
-        return imageDataURL;
+        return string.Format("data:image/jpg;base64,{0}", imageBase64Data);
     }
 }

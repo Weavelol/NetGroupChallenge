@@ -54,8 +54,8 @@
 
     private List<StorageDTO> nestedStorages = new List<StorageDTO>();
     private List<ItemDTO> nestedItems = new List<ItemDTO>();
-    private StorageCreateDTO newStorage;
-    private StorageDTO deleteStorage;
+    private StorageCreateDTO newStorage = new StorageCreateDTO();
+    private StorageDTO deleteStorage = new StorageDTO();
 
     protected override async Task OnInitializedAsync() {
         await UpdateStorages();
@@ -71,7 +71,7 @@
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
         if (accepted) {
-            await apiService.DeleteAsync($"api/storages/{deleteStorage.Id}");
+            await apiService.DeleteStorageAsync(deleteStorage.Id);
             await UpdateStorages();
             StateHasChanged();
         }
@@ -91,7 +91,7 @@
         CreateDialogOpen = false;
         if (accepted) {
             newStorage.StoragePath = $"{CurrentStorage.StoragePath}/{newStorage.Title}";
-            await apiService.PostStorageAsync("api/storages", newStorage);
+            await apiService.PostStorageAsync(newStorage);
             await UpdateStorages();
             StateHasChanged();
         }
@@ -103,7 +103,7 @@
     private async Task SelectPreviousStorage() {
         var storage = new StorageDTO();
         if(CurrentStorage.ParentStorageId is not null) {
-            storage = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.ParentStorageId}");
+            storage = await apiService.GetStorageByIdAsync(CurrentStorage.ParentStorageId);
         } 
         await UpdateCurrentStorage(storage);
     }
@@ -114,7 +114,9 @@
     }
 
     private async Task UpdateStorages() {
-        var storages = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.Id}");
-        nestedStorages = storages.NestedStorages;
+        var storage = await apiService.GetStorageByIdAsync(CurrentStorage.Id);
+        if(storage.NestedStorages is not null) {
+           nestedStorages = storage.NestedStorages; 
+        }
     }
 }

@@ -5,7 +5,5 @@
         public DateTime RegistrationDate { get; set; }
         public DateTime LastLoginDate { get; set; }
         public int MaxItemsInStorage { get; set; }
-        public int AvgItemsInStorage { get; set; }
-        public int MaxStorageDeep { get; set; }
     }
 }
