@@ -4,26 +4,65 @@
 @using DTOModels
 @using NetGroupChallengeBlazor.Client.Components
 @using BlazorClientServices.Interfaces
+@using Microsoft.AspNetCore.WebUtilities
+@using Filters
 
 @attribute [Authorize(Roles = "User, Admin")]
+@inject NavigationManager NavManager
 @inject IApiService apiService
 
-<ItemsSearchComponent>
-
-</ItemsSearchComponent>
+<ItemsSearchComponent ItemFilter="@filter" OnUpdateCallback="@UpdateItemsAsync" />
 
 <ItemsListComponent Items="@ItemsList" OnUpdateCallback="@UpdateItemsAsync">
 
 </ItemsListComponent>
 
 @code {
+    private Dictionary<string, string> queryParams = new Dictionary<string, string>();
     private List<ItemDTO> ItemsList = new List<ItemDTO>();
+    private ItemFilter filter = new ItemFilter();
+    private string apiQuery = string.Empty;
 
     protected override async Task OnInitializedAsync() {
         await UpdateItemsAsync();
     }
 
     private async Task UpdateItemsAsync() {
-        ItemsList = await apiService.GetItemsAsync($"api/items");
+        apiQuery = ApplyFilters();
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+        ItemsList = await apiService.GetItemsAsync($"api/{apiQuery}");
+    }
+
+
+
+    private string ApplyFilters() {
+        AddToQueryDictionary("Title", filter.Title);
+        AddToQueryDictionary("SerialNumber", filter.SerialNumber);
+        AddToQueryDictionary("StorageTitle", filter.StorageTitle);
+        AddToQueryDictionary("Classification", filter.Classification);
+        AddToQueryDictionary("ItemOwner", filter.ItemOwner);
+        AddToQueryDictionary("Weight", filter.Weight.ToString());
+        AddToQueryDictionary("Length", filter.Length.ToString());
+        AddToQueryDictionary("Width", filter.Width.ToString());
+        AddToQueryDictionary("Height", filter.Height.ToString());
+        var query = QueryHelpers.AddQueryString("items", queryParams);
+        NavManager.NavigateTo(query);
+        return query;
+    }
+
+    private void AddToQueryDictionary(string key, string? value) {
+        if (value is not null && value != string.Empty) {
+            if(queryParams.TryGetValue(key, out var val)) {
+                queryParams[key] = value;
+            } 
+            else {
+                queryParams.Add(key, value);
+            }
+        } else {
+            if(queryParams.TryGetValue(key, out var val)) {
+                queryParams.Remove(key);
+            } 
+        }   
     }
 }

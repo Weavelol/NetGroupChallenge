@@ -1,10 +1,77 @@
-﻿
-<div class="container">
+﻿@using Microsoft.AspNetCore.WebUtilities
+@using Filters
+@inject NavigationManager NavManager
 
+<EditForm Model="@ItemFilter">
+    <div class="form-group row">
+        <label for="Title" class="col-sm-4 col-form-label">Title</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=ItemFilter.Title class="form-control" id="Title" />
+        </div>
+    </div>
 
-</div>
+    <div class="form-group row">
+        <label for="StorageTitle" class="col-sm-4 col-form-label">Storage Title</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=ItemFilter.StorageTitle class="form-control" id="StorageTitle" />
+        </div>
+    </div>
 
+    <div class="form-group row">
+        <label for="SerialNumber" class="col-sm-4 col-form-label">SerialNumber</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=ItemFilter.SerialNumber class="form-control" id="SerialNumber" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Classification" class="col-sm-4 col-form-label">Classification</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=ItemFilter.Classification class="form-control" id="Classification" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="ItemOwner" class="col-sm-4 col-form-label">Item Owner</label>
+        <div class="col-sm-8">
+            <InputText @bind-Value=ItemFilter.ItemOwner class="form-control" id="ItemOwner" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Weight" class="col-sm-4 col-form-label">Weight</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value=ItemFilter.Weight class="form-control" id="Weight" />
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <label for="Length" class="col-sm-4 col-form-label">Length</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value=ItemFilter.Length class="form-control" id="Length" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Width" class="col-sm-4 col-form-label">Width</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value=ItemFilter.Width class="form-control" id="Width" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Height" class="col-sm-4 col-form-label">Height</label>
+        <div class="col-sm-8">
+            <InputNumber @bind-Value=ItemFilter.Height class="form-control" id="Height" />
+        </div>
+    </div>
+
+    <button type="button" class="btn" @onclick="OnUpdateCallback">Apply</button>
+</EditForm>
 
 @code {
-
+    [Parameter]
+    public ItemFilter ItemFilter { get; set; } = new ItemFilter();
+    [Parameter]
+    public EventCallback OnUpdateCallback { get; set; }
 }

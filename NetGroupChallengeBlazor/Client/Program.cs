@@ -18,6 +18,7 @@ builder.Services.AddHttpClient("NetGroupChallengeBlazor.ServerAPI",
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
     .CreateClient("NetGroupChallengeBlazor.ServerAPI"));
 
+
 builder.Services.AddApiAuthorization();
 
 builder.Services.AddTransient<IApiService, ApiService>();

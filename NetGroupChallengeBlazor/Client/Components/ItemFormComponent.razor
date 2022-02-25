@@ -4,6 +4,9 @@
 
 
 <EditForm Model="@Item">
+    <DataAnnotationsValidator />
+
+    <ValidationMessage For="@(() => Item.Title)" />
     <div class="form-group row">
         <label for="Title" class="col-sm-4 col-form-label">Title</label>
         <div class="col-sm-8">
@@ -13,7 +16,7 @@
 
     <StorageSelectComponent Item="@Item"/>
 
-
+    <ValidationMessage For="@(() => Item.Image)" />
     <div class="form-group row">
         <label for="Image" class="col-sm-4 col-form-label">Image</label>
         <div class="col-sm-8">
@@ -21,6 +24,7 @@
         </div>
     </div>
 
+    <ValidationMessage For="@(() => Item.SerialNumber)" />
     <div class="form-group row">
         <label for="SerialNumber" class="col-sm-4 col-form-label">SerialNumber</label>
         <div class="col-sm-8">
@@ -28,6 +32,7 @@
         </div>
     </div>
 
+    <ValidationMessage For="@(() => Item.Classification)" />
     <div class="form-group row">
         <label for="Classification" class="col-sm-4 col-form-label">Classification</label>
         <div class="col-sm-8">
@@ -35,6 +40,7 @@
         </div>
     </div>
 
+    <ValidationMessage For="@(() => Item.ItemOwner)" />
     <div class="form-group row">
         <label for="ItemOwner" class="col-sm-4 col-form-label">ItemOwner</label>
         <div class="col-sm-8">
@@ -42,6 +48,7 @@
         </div>
     </div>
 
+    <ValidationMessage For="@(() => Item.Weight)" />
     <div class="form-group row">
         <label for="Weight" class="col-sm-4 col-form-label">Weight</label>
         <div class="col-sm-8">
@@ -49,6 +56,7 @@
         </div>
     </div>
     
+    <ValidationMessage For="@(() => Item.Length)" />
     <div class="form-group row">
         <label for="Length" class="col-sm-4 col-form-label">Length</label>
         <div class="col-sm-8">
@@ -56,6 +64,7 @@
         </div>
     </div>
 
+    <ValidationMessage For="@(() => Item.Width)" />
     <div class="form-group row">
         <label for="Width" class="col-sm-4 col-form-label">Width</label>
         <div class="col-sm-8">
@@ -63,6 +72,7 @@
         </div>
     </div>
 
+    <ValidationMessage For="@(() => Item.Height)" />
     <div class="form-group row">
         <label for="Height" class="col-sm-4 col-form-label">Height</label>
         <div class="col-sm-8">
