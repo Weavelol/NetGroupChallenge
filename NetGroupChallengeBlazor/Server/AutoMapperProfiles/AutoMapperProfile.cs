@@ -12,6 +12,8 @@ namespace NetGroupChallengeBlazor.Server.AutoMapperProfiles {
 
             CreateMap<ItemCreateDTO, Item>();
             CreateMap<Item, ItemDTO>();
+
+            CreateMap<ApplicationUser, ApplicationUserDTO>();
         }
     }
 }
