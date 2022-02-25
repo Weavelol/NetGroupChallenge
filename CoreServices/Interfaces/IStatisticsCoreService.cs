@@ -2,6 +2,6 @@
 
 namespace CoreServices.Interfaces {
     public interface IStatisticsCoreService {
-        public StatisticsModel AnalyzeStorages(List<Storage> storages);
+        public StatisticsModel AnalyzeStorages(List<Storage> storages, ApplicationUser user);
     }
 }
