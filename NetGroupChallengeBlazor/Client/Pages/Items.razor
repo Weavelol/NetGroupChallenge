@@ -11,8 +11,13 @@
 @inject NavigationManager NavManager
 @inject IApiService apiService
 
-<ItemsSearchComponent ItemFilter="@filter" OnUpdateCallback="@UpdateFiltersAsync" />
+@if (FiltersDialogOpen) {
+    <DialogComponent Title="Update" OnClose="@OnFiltersDialogClose">
+        <ItemsSearchComponent ItemFilter="@filter"/>
+    </DialogComponent>
+}
 
+<button type="button" class="btn" @onclick="() => OpenFiltersDialog()">Add Filters</button>
 <ItemsListComponent Items="@ItemsList" OnUpdateCallback="@UpdateItemsAsync">
 
 </ItemsListComponent>
@@ -67,9 +72,6 @@
     }
 
     private async Task UpdateFiltersAsync() {
-
-
-
         await UpdateItemsAsync();
     }
 
@@ -103,5 +105,19 @@
                 queryParams.Remove(key);
             } 
         }   
+    }
+
+
+    private bool FiltersDialogOpen { get; set; }
+    private void OpenFiltersDialog() {
+        FiltersDialogOpen = true;
+        StateHasChanged();
+    }
+    private async Task OnFiltersDialogClose(bool accepted) {
+        FiltersDialogOpen = false;
+        if (accepted) {
+            await UpdateFiltersAsync();
+        }
+        StateHasChanged();
     }
 }

@@ -65,13 +65,9 @@
             <InputNumber @bind-Value=ItemFilter.Height class="form-control" id="Height" />
         </div>
     </div>
-
-    <button type="button" class="btn" @onclick="OnUpdateCallback">Apply</button>
 </EditForm>
 
 @code {
     [Parameter]
     public ItemFilter ItemFilter { get; set; } = new ItemFilter();
-    [Parameter]
-    public EventCallback OnUpdateCallback { get; set; }
 }
