@@ -14,17 +14,8 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public async Task<ApplicationUser> GetUserByIdAsync(string userId) {
-            return await context.Set<ApplicationUser>()
-                .Where(x => x.Id == userId)
-                .AsNoTracking()
-                .FirstAsync();
-        }
-
         public void UpdateLastLoginTime(string userEmail) {
-            var user = context.Set<ApplicationUser>()
-                .Where(x => x.Email == userEmail)
-                .FirstOrDefault();
+            var user = context.Set<ApplicationUser>().Where(x => x.Email == userEmail).FirstOrDefault();
             
             user.LastLoginDate = DateTime.Now;
             context.Set<ApplicationUser>().Update(user);

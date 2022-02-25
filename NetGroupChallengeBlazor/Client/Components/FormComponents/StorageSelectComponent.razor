@@ -29,7 +29,7 @@
     }
 
     protected override async Task OnInitializedAsync() {
-        storages = await apiService.GetStoragesAsync();
+        storages = await apiService.GetStoragesAsync($"api/storages");
 
         foreach(var st in storages) {
             storagesDict.Add(st.Id, st);

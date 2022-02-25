@@ -10,39 +10,36 @@ namespace BlazorClientServices.Services {
             this.http = http;
         }
 
-        public async Task<List<ApplicationUserDTO>> GetUsersAsync() {
-            return await http.GetFromJsonAsync<List<ApplicationUserDTO>>("api/users");
+        public async Task<List<ApplicationUserDTO>> GetUsersAsync(string url) {
+            return await http.GetFromJsonAsync<List<ApplicationUserDTO>>(url);
         }
-        public async Task<StatisticsDTO> GetUsersStatisticsAsync(string userId) {
-            return await http.GetFromJsonAsync<StatisticsDTO>($"api/statistics/{userId}");
-        }
-
-
-        public async Task<StorageDTO> GetStorageByIdAsync(Guid? storageId) {
-            return await http.GetFromJsonAsync<StorageDTO>($"api/storages/{storageId}");
-        }
-        public async Task<List<StorageDTO>> GetStoragesAsync() {
-            return await http.GetFromJsonAsync<List<StorageDTO>>($"api/storages");
-        }
-        public async Task PostStorageAsync(StorageCreateDTO storage) {
-            await http.PostAsJsonAsync("api/storages", storage);
-        }
-        public async Task DeleteStorageAsync(Guid? storageId) {
-            await http.DeleteAsync($"api/storages/{storageId}");
+        public async Task<StatisticsDTO> GetUsersStatisticsAsync(string url) {
+            return await http.GetFromJsonAsync<StatisticsDTO>(url);
         }
 
 
-        public async Task<List<ItemDTO>> GetItemsAsync(string apiQuery) {
-            return await http.GetFromJsonAsync<List<ItemDTO>>($"api/{apiQuery}");
+        public async Task<StorageDTO> GetStorageAsync(string url) {
+            return await http.GetFromJsonAsync<StorageDTO>(url);
         }
-        public async Task PostItemAsync(ItemCreateDTO item) {
-            await http.PostAsJsonAsync("api/items", item);
+        public async Task<List<StorageDTO>> GetStoragesAsync(string url) {
+            return await http.GetFromJsonAsync<List<StorageDTO>>(url);
         }
-        public async Task PutItemAsync(Guid? updatingItemId, ItemCreateDTO item) {
-            await http.PutAsJsonAsync($"api/items/{updatingItemId}", item);
+        public async Task PostStorageAsync(string url, StorageCreateDTO storage) {
+            await http.PostAsJsonAsync(url, storage);
         }
-        public async Task DeleteItemAsync(Guid? itemId) {
-            await http.DeleteAsync($"api/items/{itemId}");
+
+        public async Task<List<ItemDTO>> GetItemsAsync(string url) {
+            return await http.GetFromJsonAsync<List<ItemDTO>>(url);
+        }
+        public async Task PostItemAsync(string url, ItemCreateDTO item) {
+            await http.PostAsJsonAsync(url, item);
+        }
+        public async Task PutItemAsync(string url, ItemCreateDTO item) {
+            await http.PutAsJsonAsync(url, item);
+        }
+
+        public async Task DeleteAsync(string url) {
+            await http.DeleteAsync(url);
         }
     }
 }

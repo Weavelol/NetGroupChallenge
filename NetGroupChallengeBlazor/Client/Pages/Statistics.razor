@@ -42,7 +42,7 @@
 
 
     protected override async Task OnInitializedAsync() {
-        users = await apiService.GetUsersAsync();
+        users = await apiService.GetUsersAsync("api/users");
     }
 
     private async Task ChangeUser(string value) {
@@ -51,6 +51,6 @@
     }
 
     private async Task GetUsersStorages() {
-        usersStatistics = await apiService.GetUsersStatisticsAsync(CurrentUserId);
+        usersStatistics = await apiService.GetUsersStatisticsAsync($"api/statistics/{CurrentUserId}");
     }
 }
