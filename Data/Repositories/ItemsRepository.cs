@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Core.Exceptions;
+using Data.Filters;
 using Data.FilterParameters;
 
 namespace Data.Repositories {
@@ -22,8 +23,8 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<Item>> GetFilteredAsync(ItemFilters filters) {
-            throw new NotImplementedException();
+        public async Task<IEnumerable<Item>> GetFilteredAsync(ItemFiltersParameters filters) {
+            return await GetByConditionAsync(ItemFilter.GetFilteringExpression(filters));
         }
 
         protected override void UniqueCreatePart(Item item) {

@@ -17,7 +17,7 @@ namespace Services.Services {
             return Mapper.Map<IEnumerable<ItemDTO>>(entities);
         }
 
-        public async Task<IEnumerable<ItemDTO>> GetFilteredAsync(ItemFilters filters) {
+        public async Task<IEnumerable<ItemDTO>> GetFilteredAsync(ItemFiltersParameters filters) {
             var entities = await itemsRepository.GetFilteredAsync(filters);
             return Mapper.Map<IEnumerable<ItemDTO>>(entities);
         }

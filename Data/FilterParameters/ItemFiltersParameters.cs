@@ -1,5 +1,5 @@
 ﻿namespace Data.FilterParameters {
-    public class ItemFilters {
+    public class ItemFiltersParameters {
         public string? Title { get; set; }
         public string? StorageTitle { get; set; }
         public string? SerialNumber { get; set; }

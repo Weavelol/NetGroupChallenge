@@ -17,10 +17,10 @@ namespace NetGroupChallengeBlazor.Server.Controllers {
 
         // GET: api/items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAsync([FromQuery] ItemFilters filters) {
-            //var items2 = await itemsService.GetFilteredAsync(filters);
-            var items = await itemsService.GetAllAsync();
-            return Ok(items);
+        public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAsync([FromQuery] ItemFiltersParameters filters) {
+            var items2 = await itemsService.GetFilteredAsync(filters);
+            //var items = await itemsService.GetAllAsync();
+            return Ok(items2);
         }
 
         // GET api/items/5
