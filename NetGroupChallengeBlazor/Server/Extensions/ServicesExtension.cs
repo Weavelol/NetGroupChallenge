@@ -2,6 +2,8 @@
 using Data.Repositories;
 using Services.Interfaces;
 using Services.Services;
+using CoreServices.Interfaces;
+using CoreServices.Services;
 
 
 namespace NetGroupChallengeBlazor.Server.Extensions {
@@ -16,6 +18,8 @@ namespace NetGroupChallengeBlazor.Server.Extensions {
             services.AddTransient<IStoragesService, StoragesService>();
             services.AddTransient<IItemsService, ItemsService>();
             services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IStatisticsCoreService, StatisticsCoreService>();
+            services.AddTransient<IStatisticsService, StatisticsService>();
         }
     }
 }

@@ -13,5 +13,15 @@ namespace Data.Repositories {
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task UpdateLastLoginTime(string userId) {
+            var user = await context.Set<ApplicationUser>()
+                .Where(x => x.Id == userId)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            user.LastLoginDate = DateTime.Now;
+            context.Set<ApplicationUser>().Update(user);
+            await context.SaveChangesAsync();
+        }
     }
 }

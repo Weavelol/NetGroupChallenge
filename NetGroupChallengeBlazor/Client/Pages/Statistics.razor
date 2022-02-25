@@ -37,7 +37,7 @@
     }
 
     private List<ApplicationUserDTO> users = new List<ApplicationUserDTO>();
-    private List<StorageDTO> usersStorages = new List<StorageDTO>();
+    private StatisticsDTO usersStatistics = new StatisticsDTO();
     private string currentUserId = string.Empty;
 
 
@@ -51,6 +51,6 @@
     }
 
     private async Task GetUsersStorages() {
-        usersStorages = await apiService.GetUsersStoragesAsync($"api/statistics/{CurrentUserId}");
+        usersStatistics = await apiService.GetUsersStatisticsAsync($"api/statistics/{CurrentUserId}");
     }
 }

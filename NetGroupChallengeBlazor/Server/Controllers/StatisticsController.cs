@@ -4,21 +4,21 @@ using DTOModels;
 using Services.Interfaces;
 
 namespace NetGroupChallengeBlazor.Server.Controllers {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StatisticsController : ControllerBase {
-        private readonly IStoragesService storagesService;
+        private readonly IStatisticsService statisticsService;
 
-        public StatisticsController(IStoragesService storagesService) {
-            this.storagesService = storagesService;
+        public StatisticsController(IStatisticsService statisticsService) {
+            this.statisticsService = statisticsService;
         }
 
         // GET: api/statistics
         [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<StorageDTO>>> GetAllAsync(string userId) {
-            var storages = await storagesService.GetStoragesOfUserAsync(userId);
-            return Ok(storages);
+        public async Task<ActionResult<StatisticsDTO>> GetUserStatisticsAsync(string userId) {
+            var statistics = await statisticsService.GetUserStatistics(userId);
+            return Ok(statistics);
         }
     }
 }

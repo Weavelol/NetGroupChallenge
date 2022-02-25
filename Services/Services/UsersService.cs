@@ -15,5 +15,9 @@ namespace Services.Services {
             var users = await usersRepository.GetAllAsync();
             return mapper.Map<IEnumerable<ApplicationUserDTO>>(users);
         }
+
+        public async Task UpdateLastLoginTime(string userId) {
+            await usersRepository.UpdateLastLoginTime(userId);
+        }
     }
 }

@@ -42,9 +42,9 @@ namespace Data {
             builder.Entity<IdentityRole>().HasData(userRole);
 
 
-            var hasher = new PasswordHasher<IdentityUser>();
+            var hasher = new PasswordHasher<ApplicationUser>();
 
-            var adminUser = new IdentityUser {
+            var adminUser = new ApplicationUser {
                 Id = Guid.NewGuid().ToString(),
                 UserName = "admin@gmail.com",
                 NormalizedUserName = "ADMIN@GMAIL.COM",
@@ -52,7 +52,8 @@ namespace Data {
                 NormalizedEmail = "ADMIN@GMAIL.COM",
                 EmailConfirmed = false,
                 PasswordHash = hasher.HashPassword(null, "Admin123#"),
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                RegistrationDate = DateTime.Now,
             };
 
             builder.Entity<ApplicationUser>().HasData(adminUser);

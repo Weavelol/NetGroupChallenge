@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Core.Models;
+using Services.Interfaces;
+using System.Security.Claims;
 
 namespace NetGroupChallengeBlazor.Server.Areas.Identity.Pages.Account {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IUsersService usersService;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
-        {
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, IUsersService usersService) {
             _signInManager = signInManager;
             _logger = logger;
+            this.usersService = usersService;
         }
 
         /// <summary>
@@ -105,9 +108,9 @@ namespace NetGroupChallengeBlazor.Server.Areas.Identity.Pages.Account {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     _logger.LogInformation("User logged in.");
+                    await usersService.UpdateLastLoginTime(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

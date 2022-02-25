@@ -13,8 +13,8 @@ namespace BlazorClientServices.Services {
         public async Task<List<ApplicationUserDTO>> GetUsersAsync(string url) {
             return await http.GetFromJsonAsync<List<ApplicationUserDTO>>(url);
         }
-        public async Task<List<StorageDTO>> GetUsersStoragesAsync(string url) {
-            return await http.GetFromJsonAsync<List<StorageDTO>>(url);
+        public async Task<StatisticsDTO> GetUsersStatisticsAsync(string url) {
+            return await http.GetFromJsonAsync<StatisticsDTO>(url);
         }
 
 
