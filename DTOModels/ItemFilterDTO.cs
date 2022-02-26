@@ -1,5 +1,5 @@
-﻿namespace NetGroupChallengeBlazor.Client.Filters {
-    public class ItemFilter {
+﻿namespace DTOModels {
+    public class ItemFilterDTO {
         public string? Title { get; set; }
         public string? StorageTitle { get; set; }
         public string? SerialNumber { get; set; }

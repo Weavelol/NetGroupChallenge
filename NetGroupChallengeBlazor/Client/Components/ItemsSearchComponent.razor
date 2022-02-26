@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.WebUtilities
-@using Filters
+@using DTOModels
 @inject NavigationManager NavManager
 
 <EditForm Model="@ItemFilter">
@@ -69,6 +69,6 @@
 
 @code {
     [Parameter]
-    public ItemFilter ItemFilter { get; set; } = new ItemFilter();
+    public ItemFilterDTO ItemFilter { get; set; } = new ItemFilterDTO();
 
 }

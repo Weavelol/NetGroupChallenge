@@ -5,7 +5,6 @@
 @using NetGroupChallengeBlazor.Client.Components
 @using BlazorClientServices.Interfaces
 @using Microsoft.AspNetCore.WebUtilities
-@using Filters
 
 @attribute [Authorize(Roles = "User, Admin")]
 @inject NavigationManager NavManager
@@ -42,7 +41,7 @@
     [Parameter, SupplyParameterFromQuery]
     public double? Height { get; set; } = null;
 
-    private ItemFilter filter = new ItemFilter();
+    private ItemFilterDTO filter = new ItemFilterDTO();
     private List<Tuple<string, string>> tup = new List<Tuple<string, string>>();
     private Dictionary<string, string?> queryParams = new Dictionary<string, string?>();
     private List<ItemDTO> ItemsList = new List<ItemDTO>();
