@@ -4,6 +4,7 @@ using Data.Interfaces;
 using AutoMapper;
 
 namespace Services.Services {
+    /// <inheritdoc/>
     public class UsersService : IUsersService {
         private IUsersRepository usersRepository;
         private IMapper mapper;
@@ -11,12 +12,15 @@ namespace Services.Services {
             this.usersRepository = usersRepository;
             this.mapper = mapper;
         }
+
+        /// <inheritdoc/>
         public async Task<IEnumerable<ApplicationUserDTO>> GetAllAsync() {
             var users = await usersRepository.GetAllAsync();
             return mapper.Map<IEnumerable<ApplicationUserDTO>>(users);
         }
 
-        public void UpdateLastLoginTime(string userEmail) {
+        /// <inheritdoc/>
+        public void UpdateLastLoginDate(string userEmail) {
             usersRepository.UpdateLastLoginTime(userEmail);
         }
     }

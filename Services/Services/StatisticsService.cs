@@ -20,6 +20,7 @@ namespace Services.Services {
             this.mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public async Task<StatisticsDTO> GetUserStatistics(string userId) {
             var storagesToAnalyze = await storagesRepository.GetStoragesOfUserAsync(userId);
             var user = await usersRepository.GetUserByIdAsync(userId);
