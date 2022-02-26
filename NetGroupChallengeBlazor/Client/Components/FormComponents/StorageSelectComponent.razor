@@ -6,8 +6,8 @@
     <label for="Storage" class="col-sm-4 col-form-label">Storage</label>
     <div class="col-sm-8">
         <InputSelect @bind-Value="StorageId" class="form-control" id="Storage">
-            @foreach (var storage in storages) {
-                <option value="@storage.Id">@storage.StoragePath</option>
+            @foreach (var storage in storagesDict) {
+                <option value="@storage.Value.Id">@storage.Value.StoragePath</option>
             }
         </InputSelect>
     </div>
@@ -18,7 +18,7 @@
     public ItemCreateDTO Item { get; set; }
 
     private Dictionary<Guid, StorageDTO> storagesDict = new Dictionary<Guid, StorageDTO>();
-    private List<StorageDTO> storages = new List<StorageDTO>();
+
     private Guid StorageId {
         get { return Item.StorageId; }
         set {
@@ -29,7 +29,7 @@
     }
 
     protected override async Task OnInitializedAsync() {
-        storages = await apiService.GetEntitiesAsync<StorageDTO>($"api/storages");
+        var storages = await apiService.GetEntitiesAsync<StorageDTO>(Properties.Resources.storagesApi);
 
         foreach(var st in storages) {
             storagesDict.Add(st.Id, st);
@@ -39,7 +39,7 @@
 
     private void SetDefaultStorage() {
         if(Item.StorageId == Guid.Empty) {
-            Item.StorageId = storages.FirstOrDefault().Id;
+            Item.StorageId = storagesDict.FirstOrDefault().Value.Id;
         }
         StorageId = Item.StorageId;
     }
