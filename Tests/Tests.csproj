@@ -14,4 +14,15 @@
     <PackageReference Include="coverlet.collector" Version="3.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CoreTests\" />
+    <Folder Include="CoreServicesTests\" />
+    <Folder Include="BlazorClientServicesTests\" />
+    <Folder Include="DataTests\" />
+    <Folder Include="DTOModelsTests\" />
+    <Folder Include="NetGroupChallengeBlazorClientTests\" />
+    <Folder Include="NetGroupChallengeBlazorServerTests\" />
+    <Folder Include="ServicesTests\" />
+  </ItemGroup>
+
 </Project>
