@@ -71,7 +71,13 @@ namespace Data.Repositories {
         }
 
         public async Task<IEnumerable<Storage>> GetStoragesOfUserAsync(string UserId) {
-            return await GetByConditionAsync(x => x.OwnerId == UserId);
+            return await Context.Set<Storage>()
+                .Where(x => x.OwnerId == UserId)
+                .AsNoTracking()
+                .Include(x => x.ParentStorage)
+                .Include(x => x.NestedStorages)
+                .Include(x => x.NestedItems)
+                .ToListAsync();
         }
     }
 }

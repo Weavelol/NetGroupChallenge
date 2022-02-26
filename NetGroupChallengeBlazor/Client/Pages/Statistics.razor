@@ -6,12 +6,9 @@
 @attribute [Authorize(Roles = "Admin")] 
 @inject IApiService apiService
 
-
-<h3>Welcome to Statistics page</h3>
 <EditForm Model=@CurrentUserId>
     <div class="form-group row">
-        <label for="User" class="col-sm-4 col-form-label">User</label>
-        <div class="col-sm-8">
+        <div class="col-sm-2">
             <InputSelect ValueExpression="@(()=>CurrentUserId)" 
                 Value="@CurrentUserId" 
                 ValueChanged="@((string value) => ChangeUser(value))" class="form-control" id="User">
@@ -24,6 +21,26 @@
     </div>
 </EditForm>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Storages Amount</th>
+            <th>Items Amount</th>
+            <th>Registration Date</th>
+            <th>Last Login Date</th>
+            <th>Max Items in Storage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@usersStatistics.StoragesAmount</td>
+            <td>@usersStatistics.ItemsAmount</td>
+            <td>@usersStatistics.RegistrationDate</td>
+            <td>@usersStatistics.LastLoginDate</td>
+            <td>@usersStatistics.MaxItemsInStorage</td>
+        </tr>
+    </tbody>
+</table>
 
 
 @code {
