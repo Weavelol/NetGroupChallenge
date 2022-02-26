@@ -4,6 +4,9 @@ using System.Text.Json;
 
 
 namespace NetGroupChallengeBlazor.Server.Extensions {
+    /// <summary>
+    /// Custom middleware for global exceptions handling
+    /// </summary>
     public class ExceptionHandlingMiddleware {
         private readonly RequestDelegate _next;
 
@@ -18,6 +21,8 @@ namespace NetGroupChallengeBlazor.Server.Extensions {
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
+
+
         private async Task HandleExceptionAsync(HttpContext context, Exception exception) {
             context.Response.ContentType = "application/json";
 
@@ -35,6 +40,7 @@ namespace NetGroupChallengeBlazor.Server.Extensions {
                 Message = exception.Message
             }.ToString());
         }
+
 
         private class ErrorDetails {
             public int StatusCode { get; set; }

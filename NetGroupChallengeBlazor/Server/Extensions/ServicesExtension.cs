@@ -7,6 +7,10 @@ using CoreServices.Services;
 
 
 namespace NetGroupChallengeBlazor.Server.Extensions {
+
+    /// <summary>
+    /// Configurating Dependency Injection for custom classes
+    /// </summary>
     public static class ServicesExtension {
         public static void ConfigureRepositories(this IServiceCollection services) {
             services.AddTransient<IStoragesRepository, StoragesRepository>();

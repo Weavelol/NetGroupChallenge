@@ -3,6 +3,9 @@ using Core.Models;
 using DTOModels;
 
 namespace NetGroupChallengeBlazor.Server.AutoMapperProfiles {
+    /// <summary>
+    /// Class to configure AutoMapper
+    /// </summary>
     public class AutoMapperProfile : Profile {
         public AutoMapperProfile() {
             CreateMap<StorageCreateDTO, Storage>();
