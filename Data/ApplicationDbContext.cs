@@ -12,15 +12,11 @@ namespace Data {
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemImage> ItemsImages { get; set; }
 
-        public ApplicationDbContext(
-            DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions) {
-        }
+        public ApplicationDbContext( DbContextOptions options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions) { }
 
         protected override void OnModelCreating(ModelBuilder builder) {
             base.OnModelCreating(builder);
-
-
 
             var adminRole = new IdentityRole {
                 Name = "Admin",

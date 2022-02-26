@@ -9,13 +9,13 @@ namespace Data.Repositories {
             this.context = context;
         }
         public async Task<IEnumerable<ApplicationUser>> GetAllAsync() {
-            return await context.Set<ApplicationUser>()
+            return await context.Users
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<ApplicationUser> GetUserByIdAsync(string userId) {
-            return await context.Set<ApplicationUser>()
+            return await context.Users
                 .Where(x => x.Id == userId)
                 .AsNoTracking()
                 .FirstAsync();
@@ -23,12 +23,12 @@ namespace Data.Repositories {
 
 
         public void UpdateLastLoginTime(string userEmail) {
-            var user = context.Set<ApplicationUser>()
+            var user = context.Users
                 .Where(x => x.Email == userEmail)
                 .FirstOrDefault();
 
             user.LastLoginDate = DateTime.Now;
-            context.Set<ApplicationUser>().Update(user);
+            context.Users.Update(user);
             context.SaveChanges();
         }
     }
