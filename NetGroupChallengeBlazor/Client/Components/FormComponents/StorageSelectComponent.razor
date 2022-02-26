@@ -1,5 +1,5 @@
 ﻿@using DTOModels
-@using BlazorClientServices.Interfaces
+@using ClientServices.Interfaces
 @inject IApiService apiService
 
 <div class="form-group row">
@@ -29,7 +29,7 @@
     }
 
     protected override async Task OnInitializedAsync() {
-        storages = await apiService.GetStoragesAsync($"api/storages");
+        storages = await apiService.GetEntitiesAsync<StorageDTO>($"api/storages");
 
         foreach(var st in storages) {
             storagesDict.Add(st.Id, st);

@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using DTOModels
 @using NetGroupChallengeBlazor.Client.Components
-@using BlazorClientServices.Interfaces
+@using ClientServices.Interfaces
 @using Microsoft.AspNetCore.WebUtilities
 
 @attribute [Authorize(Roles = "User, Admin")]
@@ -11,7 +11,7 @@
 @inject IApiService apiService
 
 @if (FiltersDialogOpen) {
-    <DialogComponent Title="Update" OnClose="@OnFiltersDialogClose">
+    <DialogComponent Title="Filters" OnClose="@OnFiltersDialogClose">
         <ItemsSearchComponent ItemFilter="@filter"/>
     </DialogComponent>
 }
@@ -57,7 +57,7 @@
     private async Task UpdateItemsAsync() {
         apiQuery = BuildUrlQuery();
         NavManager.NavigateTo($"{NavManager.BaseUri}{apiQuery}");
-        ItemsList = await apiService.GetItemsAsync($"api/{apiQuery}");
+        ItemsList = await apiService.GetEntitiesAsync<ItemDTO>($"api/{apiQuery}");
     }
 
     private void UpdateFilterFromUrlQuery() {

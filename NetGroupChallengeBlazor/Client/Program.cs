@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using NetGroupChallengeBlazor.Client;
-using BlazorClientServices.Interfaces;
-using BlazorClientServices.Services;
+using ClientServices.Interfaces;
+using ClientServices.Services;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

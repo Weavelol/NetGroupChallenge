@@ -1,5 +1,5 @@
 ﻿@using DTOModels
-@using BlazorClientServices.Interfaces
+@using ClientServices.Interfaces
 @inject IApiService apiService
 
 @if (CreateDialogOpen) {
@@ -96,7 +96,7 @@
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
-            await apiService.PostItemAsync("api/items", newItem);
+            await apiService.CreateEntityAsync("api/items", newItem);
             await OnUpdateCallback.InvokeAsync();
             newItem = new ItemCreateDTO();
             StateHasChanged();
@@ -113,7 +113,7 @@
     private async Task OnUpdateDialogClose(bool accepted) {
         UpdateDialogOpen = false;
         if (accepted) {
-            await apiService.PutItemAsync($"api/items/{updatingId}", newItem);
+            await apiService.UpdateEntityAsync($"api/items/{updatingId}", newItem);
             await OnUpdateCallback.InvokeAsync();
             newItem = new ItemCreateDTO();
             StateHasChanged();

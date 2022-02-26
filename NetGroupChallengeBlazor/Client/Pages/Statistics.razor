@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Authorization 
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using DTOModels
-@using BlazorClientServices.Interfaces
+@using ClientServices.Interfaces
 @attribute [Authorize(Roles = "Admin")] 
 @inject IApiService apiService
 
@@ -59,7 +59,7 @@
 
 
     protected override async Task OnInitializedAsync() {
-        users = await apiService.GetUsersAsync("api/users");
+        users = await apiService.GetEntitiesAsync<ApplicationUserDTO>("api/users");
     }
 
     private async Task ChangeUser(string value) {
@@ -68,6 +68,6 @@
     }
 
     private async Task GetUsersStorages() {
-        usersStatistics = await apiService.GetUsersStatisticsAsync($"api/statistics/{CurrentUserId}");
+        usersStatistics = await apiService.GetEntityAsync<StatisticsDTO>($"api/statistics/{CurrentUserId}");
     }
 }

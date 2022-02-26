@@ -2,7 +2,7 @@
 @using DTOModels
 @using NetGroupChallengeBlazor.Client.Components
 @using Microsoft.AspNetCore.Authorization 
-@using BlazorClientServices.Interfaces
+@using ClientServices.Interfaces
 @attribute [Authorize(Roles = "User, Admin")]
 @inject IApiService apiService
 
@@ -91,7 +91,7 @@
         CreateDialogOpen = false;
         if (accepted) {
             newStorage.StoragePath = $"{CurrentStorage.StoragePath}/{newStorage.Title}";
-            await apiService.PostStorageAsync("api/storages", newStorage);
+            await apiService.CreateEntityAsync("api/storages", newStorage);
             await UpdateStorages();
             StateHasChanged();
         }
@@ -103,7 +103,7 @@
     private async Task SelectPreviousStorage() {
         var storage = new StorageDTO();
         if(CurrentStorage.ParentStorageId is not null) {
-            storage = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.ParentStorageId}");
+            storage = await apiService.GetEntityAsync<StorageDTO>($"api/storages/{CurrentStorage.ParentStorageId}");
         } 
         await UpdateCurrentStorage(storage);
     }
@@ -114,7 +114,7 @@
     }
 
     private async Task UpdateStorages() {
-        var storages = await apiService.GetStorageAsync($"api/storages/{CurrentStorage.Id}");
+        var storages = await apiService.GetEntityAsync<StorageDTO>($"api/storages/{CurrentStorage.Id}");
         nestedStorages = storages.NestedStorages;
     }
 }
