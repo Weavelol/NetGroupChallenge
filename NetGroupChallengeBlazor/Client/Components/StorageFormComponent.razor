@@ -1,11 +1,10 @@
-﻿@using DTOModels
+﻿@using NetGroupChallengeBlazor.Client.Components.FormComponents
+@using DTOModels
+
 <EditForm Model="@Storage">
-    <div class="form-group row">
-        <label for="Name" class="col-sm-4 col-form-label">Title</label>
-        <div class="col-sm-8">
-            <InputText @bind-Value=Storage.Title class="form-control" id="Name"/>
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Title">
+        <InputText @bind-Value=Storage.Title class="form-control" id="Name"/>
+    </InputBoxComponent>
 </EditForm>
 
 

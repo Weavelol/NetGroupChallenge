@@ -72,6 +72,7 @@
     private ItemCreateDTO newItem = new ItemCreateDTO();
     private Guid updatingId;
 
+
     private bool DeleteDialogOpen { get; set; }
     private void OpenDeleteDialog(ItemDTO item) {
         DeleteDialogOpen = true;
@@ -81,11 +82,12 @@
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
         if (accepted) {
-            await apiService.DeleteAsync($"api/items/{currentItem.Id}");
+            await apiService.DeleteAsync($"{Properties.Resources.itemsApi}/{currentItem.Id}");
             await OnUpdateCallback.InvokeAsync();
             StateHasChanged();
         }
     }
+
 
     private bool CreateDialogOpen { get; set; }
     private void OpenCreateDialog() {
@@ -96,12 +98,13 @@
     private async Task OnCreateDialogClose(bool accepted) {
         CreateDialogOpen = false;
         if (accepted) {
-            await apiService.CreateEntityAsync("api/items", newItem);
+            await apiService.CreateEntityAsync(Properties.Resources.itemsApi, newItem);
             await OnUpdateCallback.InvokeAsync();
             newItem = new ItemCreateDTO();
             StateHasChanged();
         }
     }
+
 
     private bool UpdateDialogOpen { get; set; }
     private void OpenUpdateDialog(ItemDTO item) {
@@ -113,16 +116,16 @@
     private async Task OnUpdateDialogClose(bool accepted) {
         UpdateDialogOpen = false;
         if (accepted) {
-            await apiService.UpdateEntityAsync($"api/items/{updatingId}", newItem);
+            await apiService.UpdateEntityAsync($"{Properties.Resources.itemsApi}/{updatingId}", newItem);
             await OnUpdateCallback.InvokeAsync();
             newItem = new ItemCreateDTO();
             StateHasChanged();
         }
     }
 
+
     private string CreateImage(ImageDTO image) {
         string imageBase64Data = Convert.ToBase64String(image.ImageData);
-        string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
-        return imageDataURL;
+        return string.Format("data:image/jpg;base64,{0}", imageBase64Data);
     }
 }

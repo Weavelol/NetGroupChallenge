@@ -61,6 +61,24 @@ namespace NetGroupChallengeBlazor.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/items.
+        /// </summary>
+        internal static string itemsApi {
+            get {
+                return ResourceManager.GetString("itemsApi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/statistics.
+        /// </summary>
+        internal static string statisticsApi {
+            get {
+                return ResourceManager.GetString("statisticsApi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/storages.
         /// </summary>
         internal static string storagesApi {

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="itemsApi" xml:space="preserve">
+    <value>api/items</value>
+  </data>
+  <data name="statisticsApi" xml:space="preserve">
+    <value>api/statistics</value>
+  </data>
   <data name="storagesApi" xml:space="preserve">
     <value>api/storages</value>
   </data>

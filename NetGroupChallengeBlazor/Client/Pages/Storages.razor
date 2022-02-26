@@ -71,7 +71,7 @@
     private async Task OnDeleteDialogClose(bool accepted) {
         DeleteDialogOpen = false;
         if (accepted) {
-            await apiService.DeleteAsync($"api/storages/{deleteStorage.Id}");
+            await apiService.DeleteAsync($"{Properties.Resources.storagesApi}/{deleteStorage.Id}");
             await UpdateStorages();
             StateHasChanged();
         }
@@ -91,7 +91,7 @@
         CreateDialogOpen = false;
         if (accepted) {
             newStorage.StoragePath = $"{CurrentStorage.StoragePath}/{newStorage.Title}";
-            await apiService.CreateEntityAsync("api/storages", newStorage);
+            await apiService.CreateEntityAsync(Properties.Resources.storagesApi, newStorage);
             await UpdateStorages();
             StateHasChanged();
         }
@@ -100,10 +100,11 @@
     private async Task SelectNextStorage(StorageDTO storage) {
         await UpdateCurrentStorage(storage);
     }
+
     private async Task SelectPreviousStorage() {
         var storage = new StorageDTO();
         if(CurrentStorage.ParentStorageId is not null) {
-            storage = await apiService.GetEntityAsync<StorageDTO>($"api/storages/{CurrentStorage.ParentStorageId}");
+            storage = await apiService.GetEntityAsync<StorageDTO>($"{Properties.Resources.storagesApi}/{CurrentStorage.ParentStorageId}");
         } 
         await UpdateCurrentStorage(storage);
     }
@@ -114,7 +115,7 @@
     }
 
     private async Task UpdateStorages() {
-        var storages = await apiService.GetEntityAsync<StorageDTO>($"api/storages/{CurrentStorage.Id}");
+        var storages = await apiService.GetEntityAsync<StorageDTO>($"{Properties.Resources.storagesApi}/{CurrentStorage.Id}");
         nestedStorages = storages.NestedStorages;
     }
 }

@@ -59,7 +59,7 @@
 
 
     protected override async Task OnInitializedAsync() {
-        users = await apiService.GetEntitiesAsync<ApplicationUserDTO>("api/users");
+        users = await apiService.GetEntitiesAsync<ApplicationUserDTO>(Properties.Resources.itemsApi);
     }
 
     private async Task ChangeUser(string value) {
@@ -68,6 +68,6 @@
     }
 
     private async Task GetUsersStorages() {
-        usersStatistics = await apiService.GetEntityAsync<StatisticsDTO>($"api/statistics/{CurrentUserId}");
+        usersStatistics = await apiService.GetEntityAsync<StatisticsDTO>($"{Properties.Resources.statisticsApi}/{CurrentUserId}");
     }
 }

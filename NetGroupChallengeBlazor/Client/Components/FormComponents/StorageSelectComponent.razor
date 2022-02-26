@@ -2,16 +2,13 @@
 @using ClientServices.Interfaces
 @inject IApiService apiService
 
-<div class="form-group row">
-    <label for="Storage" class="col-sm-4 col-form-label">Storage</label>
-    <div class="col-sm-8">
-        <InputSelect @bind-Value="StorageId" class="form-control" id="Storage">
+<InputBoxComponent PropertyName="Storage">
+    <InputSelect @bind-Value="StorageId" class="form-control" id="Storage">
             @foreach (var storage in storagesDict) {
                 <option value="@storage.Value.Id">@storage.Value.StoragePath</option>
             }
         </InputSelect>
-    </div>
-</div>
+</InputBoxComponent>
 
 @code {
     [Parameter]

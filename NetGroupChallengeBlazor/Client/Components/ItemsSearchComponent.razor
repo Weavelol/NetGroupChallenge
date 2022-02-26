@@ -1,70 +1,45 @@
 ﻿@using Microsoft.AspNetCore.WebUtilities
 @using DTOModels
+@using NetGroupChallengeBlazor.Client.Components.FormComponents
 @inject NavigationManager NavManager
 
 <EditForm Model="@ItemFilter">
-    <div class="form-group row">
-        <label for="Title" class="col-sm-4 col-form-label">Title</label>
-        <div class="col-sm-8">
-            <InputText @bind-Value=ItemFilter.Title class="form-control" id="Title" />
-        </div>
-    </div>
 
-    <div class="form-group row">
-        <label for="StorageTitle" class="col-sm-4 col-form-label">Storage Title</label>
-        <div class="col-sm-8">
-            <InputText @bind-Value=ItemFilter.StorageTitle class="form-control" id="StorageTitle" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Title">
+        <InputText @bind-Value=ItemFilter.Title class="form-control" id="Title" />
+    </InputBoxComponent>
 
-    <div class="form-group row">
-        <label for="SerialNumber" class="col-sm-4 col-form-label">SerialNumber</label>
-        <div class="col-sm-8">
-            <InputText @bind-Value=ItemFilter.SerialNumber class="form-control" id="SerialNumber" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Storage Title">
+        <InputText @bind-Value=ItemFilter.StorageTitle class="form-control" id="StorageTitle" />
+    </InputBoxComponent>
 
-    <div class="form-group row">
-        <label for="Classification" class="col-sm-4 col-form-label">Classification</label>
-        <div class="col-sm-8">
-            <InputText @bind-Value=ItemFilter.Classification class="form-control" id="Classification" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="SerialNumber">
+        <InputText @bind-Value=ItemFilter.SerialNumber class="form-control" id="SerialNumber" />
+    </InputBoxComponent>
 
-    <div class="form-group row">
-        <label for="ItemOwner" class="col-sm-4 col-form-label">Item Owner</label>
-        <div class="col-sm-8">
-            <InputText @bind-Value=ItemFilter.ItemOwner class="form-control" id="ItemOwner" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Classification">
+        <InputText @bind-Value=ItemFilter.Classification class="form-control" id="Classification" />
+    </InputBoxComponent>
 
-    <div class="form-group row">
-        <label for="Weight" class="col-sm-4 col-form-label">Weight</label>
-        <div class="col-sm-8">
-            <InputNumber @bind-Value=ItemFilter.Weight class="form-control" id="Weight" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Item Owner">
+        <InputText @bind-Value=ItemFilter.ItemOwner class="form-control" id="ItemOwner" />
+    </InputBoxComponent>
+
+    <InputBoxComponent PropertyName="Weight">
+        <InputNumber @bind-Value=ItemFilter.Weight class="form-control" id="Weight" />
+    </InputBoxComponent>
     
-    <div class="form-group row">
-        <label for="Length" class="col-sm-4 col-form-label">Length</label>
-        <div class="col-sm-8">
-            <InputNumber @bind-Value=ItemFilter.Length class="form-control" id="Length" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Length">
+        <InputNumber @bind-Value=ItemFilter.Length class="form-control" id="Length" />
+    </InputBoxComponent>
 
-    <div class="form-group row">
-        <label for="Width" class="col-sm-4 col-form-label">Width</label>
-        <div class="col-sm-8">
-            <InputNumber @bind-Value=ItemFilter.Width class="form-control" id="Width" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Width">
+        <InputNumber @bind-Value=ItemFilter.Width class="form-control" id="Width" />
+    </InputBoxComponent>
 
-    <div class="form-group row">
-        <label for="Height" class="col-sm-4 col-form-label">Height</label>
-        <div class="col-sm-8">
-            <InputNumber @bind-Value=ItemFilter.Height class="form-control" id="Height" />
-        </div>
-    </div>
+    <InputBoxComponent PropertyName="Height">
+        <InputNumber @bind-Value=ItemFilter.Height class="form-control" id="Height" />
+    </InputBoxComponent>
 </EditForm>
 
 @code {
