@@ -24,5 +24,20 @@ namespace DTOModels {
 
         [Range(0, double.MaxValue, ErrorMessage = "Height should be positive number.")]
         public double? Height { get; set; }
+
+        public ItemCreateDTO() { }
+        public ItemCreateDTO(ItemDTO item) {
+            Title = item.Title;
+            StorageId = item.StorageId;
+            ImageId = item.ImageId;
+            Image = item.Image;
+            SerialNumber = item.SerialNumber;
+            Classification = item.Classification;
+            ItemOwner = item.ItemOwner;
+            Weight = item.Weight;
+            Length = item.Length;
+            Width = item.Width;
+            Height = item.Height;
+        }
     }
 }

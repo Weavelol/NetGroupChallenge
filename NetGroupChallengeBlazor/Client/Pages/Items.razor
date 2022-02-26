@@ -42,16 +42,25 @@
     [Parameter, SupplyParameterFromQuery]
     public double? Height { get; set; } = null;
 
-
+    private ItemFilter filter = new ItemFilter();
+    private List<Tuple<string, string>> tup = new List<Tuple<string, string>>();
     private Dictionary<string, string?> queryParams = new Dictionary<string, string?>();
     private List<ItemDTO> ItemsList = new List<ItemDTO>();
     private string apiQuery = string.Empty;
 
 
-
-    public ItemFilter filter { get; set; } = new ItemFilter();
-
     protected override async Task OnInitializedAsync() {
+        UpdateFilterFromUrlQuery();
+        await UpdateItemsAsync();
+    }
+
+    private async Task UpdateItemsAsync() {
+        apiQuery = BuildUrlQuery();
+        NavManager.NavigateTo($"{NavManager.BaseUri}{apiQuery}");
+        ItemsList = await apiService.GetItemsAsync($"api/{apiQuery}");
+    }
+
+    private void UpdateFilterFromUrlQuery() {
         filter.Title = Title;
         filter.SerialNumber = SerialNumber;
         filter.StorageTitle = StorageTitle;
@@ -61,23 +70,9 @@
         filter.Length = Length;
         filter.Width = Width;
         filter.Height = Height;
-
-
-        await UpdateItemsAsync();
     }
 
-    private async Task UpdateItemsAsync() {
-        apiQuery = ApplyFilters();
-        ItemsList = await apiService.GetItemsAsync($"api/{apiQuery}");
-    }
-
-    private async Task UpdateFiltersAsync() {
-        await UpdateItemsAsync();
-    }
-
-
-
-    private string ApplyFilters() {
+    private string BuildUrlQuery() {
         AddToQueryDictionary("Title", filter.Title);
         AddToQueryDictionary("SerialNumber", filter.SerialNumber);
         AddToQueryDictionary("StorageTitle", filter.StorageTitle);
@@ -87,9 +82,7 @@
         AddToQueryDictionary("Length", filter.Length.ToString());
         AddToQueryDictionary("Width", filter.Width.ToString());
         AddToQueryDictionary("Height", filter.Height.ToString());
-        var query = QueryHelpers.AddQueryString("items", queryParams);
-        NavManager.NavigateTo($"{NavManager.BaseUri}{query}");
-        return query;
+        return QueryHelpers.AddQueryString("items", queryParams);
     }
 
     private void AddToQueryDictionary(string key, string? value) {
@@ -107,7 +100,6 @@
         }   
     }
 
-
     private bool FiltersDialogOpen { get; set; }
     private void OpenFiltersDialog() {
         FiltersDialogOpen = true;
@@ -116,7 +108,7 @@
     private async Task OnFiltersDialogClose(bool accepted) {
         FiltersDialogOpen = false;
         if (accepted) {
-            await UpdateFiltersAsync();
+            await UpdateItemsAsync();
         }
         StateHasChanged();
     }

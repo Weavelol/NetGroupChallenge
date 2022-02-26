@@ -21,8 +21,7 @@
 }
 
 
-<div class="container">
-    <a></a>
+<div>
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -41,14 +40,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Items)
-            {
+            @foreach (var item in Items) {
                 <tr>
-                    <td>
-                        <img src="@CreateImage(item.Image)" width="150" height="100"/>
-                    </td>
+                    <td><img src="@CreateImage(item.Image)" width="150" height="100"/></td>
                     <td>@item.Title</td>
-                    <td>@item.ParentStorage.StoragePath</td>
+                    <td>@item.ParentStorage?.StoragePath</td>
                     <td>@item.ItemOwner</td>
                     <td>@item.Classification</td>
                     <td>@item.SerialNumber</td>
@@ -110,19 +106,7 @@
     private bool UpdateDialogOpen { get; set; }
     private void OpenUpdateDialog(ItemDTO item) {
         updatingId = item.Id;
-        newItem = new ItemCreateDTO {
-                Title = item.Title,
-                StorageId = item.StorageId,
-                ImageId = item.ImageId,
-                Image = item.Image,
-                SerialNumber = item.SerialNumber,
-                Classification = item.Classification,
-                ItemOwner = item.ItemOwner,
-                Weight = item.Weight,
-                Length = item.Length,
-                Width = item.Width,
-                Height = item.Height
-            };
+        newItem = new ItemCreateDTO(item);
         UpdateDialogOpen = true;
         StateHasChanged();
     }
