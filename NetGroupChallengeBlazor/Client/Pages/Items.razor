@@ -17,6 +17,7 @@
 }
 
 <button type="button" class="btn" @onclick="() => OpenFiltersDialog()">Add Filters</button>
+<button type="button" class="btn" @onclick="() => ClearFilters()">Clear Filters</button>
 <ItemsListComponent Items="@ItemsList" OnUpdateCallback="@UpdateItemsAsync">
 
 </ItemsListComponent>
@@ -110,5 +111,10 @@
             await UpdateItemsAsync();
         }
         StateHasChanged();
+    }
+
+    private async Task ClearFilters() {
+        filter = new ItemFilterDTO();
+        await UpdateItemsAsync();
     }
 }
