@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="BlazorClientServicesTests\" />
-    <Folder Include="DataTests\" />
     <Folder Include="DTOModelsTests\" />
     <Folder Include="NetGroupChallengeBlazorClientTests\" />
     <Folder Include="NetGroupChallengeBlazorServerTests\" />

@@ -6,6 +6,10 @@ using LinqKit;
 namespace Data.Filters {
     public static class ItemFilter {
         public static Expression<Func<Item, bool>> GetFilteringExpression(ItemFiltersParameters filter) {
+            if (filter is null) {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
             Expression<Func<Item, bool>>? filteringExpression = PredicateBuilder.New<Item>(true);
             var original = filteringExpression;
 
@@ -29,13 +33,13 @@ namespace Data.Filters {
                 filteringExpression = filteringExpression.And(x => x.Weight == filter.Weight);
             }
             if (filter.Length >= 0) {
-                filteringExpression = filteringExpression.And(x => x.Weight == filter.Length);
+                filteringExpression = filteringExpression.And(x => x.Length == filter.Length);
             }
             if (filter.Width >= 0) {
-                filteringExpression = filteringExpression.And(x => x.Weight == filter.Width);
+                filteringExpression = filteringExpression.And(x => x.Width == filter.Width);
             }
             if (filter.Height >= 0) {
-                filteringExpression = filteringExpression.And(x => x.Weight == filter.Height);
+                filteringExpression = filteringExpression.And(x => x.Height == filter.Height);
             }
 
 
