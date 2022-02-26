@@ -8,11 +8,13 @@ using Data.Filters;
 using Data.FilterParameters;
 
 namespace Data.Repositories {
+    /// <inheritdoc/>
     public class ItemsRepository : AbstractRepository<Item>, IItemsRepository {
 
         public ItemsRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
             : base(context, httpContextAccessor) { }
 
+        /// <inheritdoc/>
         public override async Task<IEnumerable<Item>> GetByConditionAsync(Expression<Func<Item, bool>> expression) {
             return await Context.Set<Item>()
                 .Include(x => x.ParentStorage)
@@ -23,6 +25,7 @@ namespace Data.Repositories {
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<Item>> GetFilteredAsync(ItemFiltersParameters filters) {
             return await GetByConditionAsync(ItemFilter.GetFilteringExpression(filters));
         }
@@ -31,12 +34,13 @@ namespace Data.Repositories {
             item.ParentStorage = null;
         }
 
+        /// <inheritdoc/>
         public async Task UpdateAsync(Item item) {
             if (item is null) {
-                throw new NullReferenceException("Source Item wasn't provided.");
+                throw new NullReferenceException(Properties.Resources.ItemNotProvidedExceptionMessage);
             }
             if (!await ExistsAsync(item.Id)) {
-                throw new EntityNotFoundException($"There is no entity with id: {item.Id}");
+                throw new EntityNotFoundException(Properties.Resources.NotFoundExceptionMessage);
             }
             Context.Set<Item>().Update(item);
             await SaveChangesAsync();

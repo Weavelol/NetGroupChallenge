@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Core.Exceptions;
 
 namespace Data.Repositories {
+    /// <inheritdoc/>
     public class StoragesRepository : AbstractRepository<Storage>, IStoragesRepository {
 
         public StoragesRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) 
             : base(context, httpContextAccessor) { }
 
+        /// <inheritdoc/>
         public override async Task<IEnumerable<Storage>> GetByConditionAsync(Expression<Func<Storage, bool>> expression) {
             return await Context.Set<Storage>()
                 .Where(x => x.OwnerId == UserId)
@@ -27,9 +29,10 @@ namespace Data.Repositories {
             item.OwnerId = UserId;
         }
 
+        /// <inheritdoc/>
         public override async Task<Storage> GetByIdAsync(Guid id) {
             if(UserId is null) {
-                throw new NotAuthorizedException("there is no authorized user in system.");
+                throw new NotAuthorizedException(Properties.Resources.NotAuthorizedException);
             }
 
             if (id == Guid.Empty) {
@@ -45,18 +48,16 @@ namespace Data.Repositories {
             }
             var items = await GetByConditionAsync(x => x.Id == id);
             if (items is null || !items.Any()) {
-                throw new EntityNotFoundException($"There is no entity with id: {id}");
+                throw new EntityNotFoundException(Properties.Resources.NotFoundExceptionMessage);
             }
             return items.FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public override async Task DeleteAsync(Guid id) {
             var item = await GetByIdAsync(id);
-            if (item.NestedStorages.Any()) {
-                throw new CascadeDeleteException("Storage cannot be deleted since it contains other storages.");
-            }
-            if (item.NestedItems.Any()) {
-                throw new CascadeDeleteException("Storage cannot be deleted since it contatins items.");
+            if (item.NestedStorages.Any() || item.NestedItems.Any()) {
+                throw new CascadeDeleteException(Properties.Resources.CascadeDeleteException);
             }
 
             Context.Set<Storage>().Remove(item);
@@ -70,6 +71,7 @@ namespace Data.Repositories {
             return GetByConditionAsync(x => x.ParentStorageId == parentStorageId);
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<Storage>> GetStoragesOfUserAsync(string UserId) {
             return await Context.Set<Storage>()
                 .Where(x => x.OwnerId == UserId)

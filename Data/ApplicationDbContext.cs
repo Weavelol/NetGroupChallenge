@@ -19,14 +19,14 @@ namespace Data {
             base.OnModelCreating(builder);
 
             var adminRole = new IdentityRole {
-                Name = "Admin",
-                NormalizedName = "ADMIN",
+                Name = Properties.Resources.adminRoleName,
+                NormalizedName = Properties.Resources.adminRoleName.ToUpper(),
                 Id = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
             var userRole = new IdentityRole {
-                Name = "User",
-                NormalizedName = "USER",
+                Name = Properties.Resources.userRoleName,
+                NormalizedName = Properties.Resources.userRoleName.ToUpper(),
                 Id = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
@@ -39,12 +39,12 @@ namespace Data {
 
             var adminUser = new ApplicationUser {
                 Id = Guid.NewGuid().ToString(),
-                UserName = "admin@gmail.com",
-                NormalizedUserName = "ADMIN@GMAIL.COM",
-                Email = "admin@gmail.com",
-                NormalizedEmail = "ADMIN@GMAIL.COM",
+                UserName = Properties.Resources.adminEmail,
+                NormalizedUserName = Properties.Resources.adminEmail.ToUpper(),
+                Email = Properties.Resources.adminEmail,
+                NormalizedEmail = Properties.Resources.adminEmail.ToUpper(),
                 EmailConfirmed = false,
-                PasswordHash = hasher.HashPassword(null, "Admin123#"),
+                PasswordHash = hasher.HashPassword(null, Properties.Resources.adminPassword),
                 SecurityStamp = Guid.NewGuid().ToString(),
                 RegistrationDate = DateTime.Now,
             };

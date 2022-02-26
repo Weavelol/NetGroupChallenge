@@ -4,7 +4,17 @@ using System.Linq.Expressions;
 using LinqKit;
 
 namespace Data.Filters {
+    /// <summary>
+    /// ItemFilter used to create expressions to use in repository from FilterParameters Values
+    /// </summary>
     public static class ItemFilter {
+
+        /// <summary>
+        /// Creates expression for Item-Query from item Filters
+        /// </summary>
+        /// <param name="filter">ItemFiltersParameters with filtering Data</param>
+        /// <returns>Expression for LINQ query used in repository</returns>
+        /// <exception cref="ArgumentNullException">filter parameter was null</exception>
         public static Expression<Func<Item, bool>> GetFilteringExpression(ItemFiltersParameters filter) {
             if (filter is null) {
                 throw new ArgumentNullException(nameof(filter));
