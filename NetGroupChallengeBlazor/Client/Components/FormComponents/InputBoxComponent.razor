@@ -1,0 +1,14 @@
+﻿<div class="form-group row">
+    <label for="@PropertyName" class="col-sm-4 col-form-label">@PropertyName</label>
+    <div class="col-sm-8">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string PropertyName { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}
