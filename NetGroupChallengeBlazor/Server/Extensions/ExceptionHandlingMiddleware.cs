@@ -25,6 +25,7 @@ namespace NetGroupChallengeBlazor.Server.Extensions {
                 EntityNotFoundException => HttpStatusCode.NotFound,
                 NotAuthorizedException => HttpStatusCode.Unauthorized,
                 NullReferenceException => HttpStatusCode.BadRequest,
+                ArgumentNullException => HttpStatusCode.BadRequest,
                 _ => HttpStatusCode.InternalServerError
             };
             context.Response.StatusCode = (int)statusCode;

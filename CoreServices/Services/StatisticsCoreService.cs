@@ -2,24 +2,25 @@
 using CoreServices.Interfaces;
 
 namespace CoreServices.Services {
+    /// <inheritdoc/>
     public class StatisticsCoreService : IStatisticsCoreService {
 
-        public StatisticsModel AnalyzeStorages(List<Storage> storages, ApplicationUser user) {
-            var statisticsResults = new StatisticsModel {
+        /// <inheritdoc/>
+        public Statistics AnalyzeStorages(List<Storage> storages, ApplicationUser user) {
+            var statisticsResults = new Statistics {
                 StoragesAmount = storages.Count
-
             };
 
+            if (TryGetDateTime(user.RegistrationDate, out var result)) {
+                statisticsResults.RegistrationDate = result;
+            }
+
+            if (TryGetDateTime(user.LastLoginDate, out result)) {
+                statisticsResults.LastLoginDate = result;
+            }
+
+
             int itemsCount = 0, maxItemsInStorage = 0;
-
-            if (user.RegistrationDate is not null) {
-                statisticsResults.RegistrationDate = (DateTime)user.RegistrationDate;
-            }
-            if (user.LastLoginDate is not null) {
-                statisticsResults.LastLoginDate = (DateTime)user.LastLoginDate;
-            }
-
-
 
             foreach (var storage in storages) {
                 if (storage.NestedItems is not null) {
@@ -37,6 +38,13 @@ namespace CoreServices.Services {
             return statisticsResults;
         }
 
-
+        private bool TryGetDateTime(DateTime? source, out DateTime result) {
+            result = DateTime.Now;
+            if(source is not null) {
+                result = (DateTime)source;
+                return true;
+            }
+            return false;
+        }
     }
 }
