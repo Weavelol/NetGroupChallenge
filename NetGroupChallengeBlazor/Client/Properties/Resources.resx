@@ -126,4 +126,7 @@
   <data name="storagesApi" xml:space="preserve">
     <value>api/storages</value>
   </data>
+  <data name="usersApi" xml:space="preserve">
+    <value>api/users</value>
+  </data>
 </root>

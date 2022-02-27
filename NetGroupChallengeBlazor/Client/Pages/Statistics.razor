@@ -59,7 +59,7 @@
 
 
     protected override async Task OnInitializedAsync() {
-        users = await apiService.GetEntitiesAsync<ApplicationUserDTO>(Properties.Resources.itemsApi);
+        users = await apiService.GetEntitiesAsync<ApplicationUserDTO>(Properties.Resources.usersApi);
     }
 
     private async Task ChangeUser(string value) {
