@@ -20,10 +20,8 @@
 
   <ItemGroup>
     <Folder Include="BlazorClientServicesTests\" />
-    <Folder Include="DTOModelsTests\" />
     <Folder Include="NetGroupChallengeBlazorClientTests\" />
     <Folder Include="NetGroupChallengeBlazorServerTests\" />
-    <Folder Include="ServicesTests\" />
   </ItemGroup>
 
   <ItemGroup>
